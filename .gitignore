@@ -1,0 +1,32 @@
+# Junk files
+.DS_Store
+*.swp
+*.swo
+*.swn
+*.pyc
+*~
+
+# IntelliJ files
+*.iml
+*.ipr
+*.iws
+.idea
+
+# Eclipse files
+.buildpath
+.project
+.settings
+
+# sbt
+logs
+project/project
+project/target
+target
+tmp
+.history
+dist
+/out
+/.classpath
+/.project
+/RUNNING_PID
+/.settings
