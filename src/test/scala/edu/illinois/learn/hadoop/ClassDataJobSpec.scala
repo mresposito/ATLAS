@@ -1,15 +1,5 @@
 /*
- * Copyright (c) 2013 Coursera, Inc.
- * Author: Michele Esposito <michele@coursera.org>
- *
- * This program is licensed to you under the Apache License Version 2.0,
- * and you may not use this file except in compliance with the Apache License Version 2.0.
- * You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the Apache License Version 2.0 is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+ * Author: Michele Esposito 
  */
 package edu.illinois.learn.hadoop
 
@@ -20,7 +10,7 @@ import org.specs2.mutable.Specification
 import com.twitter.scalding._
 import com.typesafe.scalalogging.slf4j.Logging
 
-class ReferTest extends Specification with TupleConversions {
+class ClassDataJob extends Specification with TupleConversions {
 
   "A WordCount job" should {
     JobTest("edu.illinois.learn.hadoop.WordCountJob").
@@ -39,7 +29,7 @@ class ReferTest extends Specification with TupleConversions {
   }
 
   "A Typed WordCount job" should {
-    JobTest("edu.illinois.learn.hadoop.WordCountJob").
+    JobTest("edu.illinois.learn.hadoop.TypedWordCountJob").
       arg("input", "inputFile").
       arg("output", "outputFile").
       source(TextLine("inputFile"), List("0" -> "hack hack hack and hack")).
@@ -53,4 +43,19 @@ class ReferTest extends Specification with TupleConversions {
       run.
       finish
   }
+
+  // "A Department Count job" should {
+  //   JobTest("edu.illinois.learn.hadoop.DepartmentCountJob").
+  //     arg("input", "inputFile").
+  //     arg("output", "outputFile").
+  //     source(Tsv("inputFile"), List((0,"AAS\the\t"))).
+  //     sink[(String,Int)](Csv("outputFile")){ outputBuffer =>
+  //       val outMap = outputBuffer.toMap
+  //       "count departments correctly" in {
+  //         outMap("AAS") must be_==(1)
+  //       }
+  //     }.
+  //     run.
+  //     finish
+  // }
 }
