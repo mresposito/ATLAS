@@ -34,7 +34,9 @@ object ScaldingExampleProjectBuild extends Build {
         // Add your additional libraries here (comma-separated)...
         "com.typesafe" %% "scalalogging-slf4j" % "1.0.1",
         "com.twitter.elephantbird" % "elephant-bird-cascading2" % "4.1",
-        "org.json4s" %% "json4s-jackson" % "3.2.5"
+        "org.json4s" %% "json4s-jackson" % "3.2.5",
+        "mysql" % "mysql-connector-java" % "5.1.24",
+        "com.typesafe.slick" %% "slick" % "1.0.1"
       )
     )
 }
