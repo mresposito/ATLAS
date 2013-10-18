@@ -13,4 +13,8 @@ class DataAccessLayer {
   def countForumType = connection withSession {
     Query(Forums).list.groupBy(_.forumType)
   }
+
+  def getCRN(courseId: Long) = connection withSession {
+    Query(CRNs).filter(_.courseId === courseId).map(_.crn).firstOption
+  }
 }

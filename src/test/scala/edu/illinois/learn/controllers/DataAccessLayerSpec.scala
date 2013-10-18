@@ -27,4 +27,18 @@ class DataAccessLayerSpec extends Specification {
       dal.countForumType("general").length must beEqualTo(8446)
     }
   }
+
+  "match classes" should {
+    "classID 249 -> crn 30560" in {
+      dal.getCRN(249).get must beEqualTo(30560)
+    }
+
+    "classID 213 -> crn 32294" in {
+      dal.getCRN(213).get must beEqualTo(32294)
+    }
+
+    "classID non existisng should be none" in {
+      dal.getCRN(2042085).isDefined must beFalse
+    }
+  }
 }
