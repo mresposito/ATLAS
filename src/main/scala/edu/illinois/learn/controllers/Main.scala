@@ -1,27 +1,18 @@
-package edu.illinois.learn.classAnalysis
+package edu.illinois.learn.main
 
-import java.io.PrintWriter
 import edu.illinois.learn.models.DataAccessLayer
+import edu.illinois.learn.models.Class
+import edu.illinois.learn.classAnalysis._
+import edu.illinois.learn.utils.TSVUtil
 
-class RunWrapper[A <: ClassAnalysis](val cls: List[A], val output: String = "results/") {
-
-  def count[B](a: Map[String, List[B]]): Map[String, Int] = a.map(k => (k._1, k._2.length))
+class RunWrapper[A <: ClassAnalysis](val cls: List[A]) extends TSVUtil {
 
   def run(fun: A => Map[String, List[Class]], jobName: String): Unit = cls.map { a: A =>
     writeResults(a.name + jobName, fun(a))
   }
-
-  def writeResults[B](path: String, results: Map[String, List[B]]) = {
-    val p = new PrintWriter(output + path + ".tsv", "UTF-8")
-    p.print {
-      count(results).toList.sortBy(el => el._2.toString.toInt). // little hack
-        map(el => el._1 + "\t" + el._2.toString).mkString("\n")
-    }
-    p.close()
-  }
 }
 
-object ClassRunner {
+object ClassRunner extends TSVUtil  {
   def main(args: Array[String]) = {
     val classData = "data/listOfClasses.json"
     val wrapper = new RunWrapper(
@@ -34,6 +25,6 @@ object ClassRunner {
     wrapper.run(_.countSectionsPerClass, "SectionsPerClass")
     wrapper.run(_.countLocationPerSession, "LocationPerSection")
     
-    wrapper.writeResults("forumPerClass", dal.countForumType)
+    writeResults("forumPerClass", dal.countForumType)
   }
 }

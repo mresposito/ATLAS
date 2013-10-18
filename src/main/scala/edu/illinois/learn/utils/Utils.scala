@@ -3,11 +3,11 @@
  */
 package edu.illinois.learn.utils
 
-import scala.io.Source
-import java.io.File
+import edu.illinois.learn.models.Class
+import java.io.PrintWriter
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
-import edu.illinois.learn.classAnalysis.Class
+import scala.io.Source
 
 trait TSVUtil {
 
@@ -17,6 +17,17 @@ trait TSVUtil {
 
   def readfromIO(input: String):Array[Array[String]] = {
     readTSVLines(input).map(_.split("\t"))
+  }
+
+  def count[B](a: Map[String, List[B]]): Map[String, Int] = a.map(k => (k._1, k._2.length))
+
+  def writeResults[B](path: String, results: Map[String, List[B]], output: String = "results/") = {
+    val p = new PrintWriter(output + path + ".tsv", "UTF-8")
+    p.print {
+      count(results).toList.sortBy(el => el._2.toString.toInt). // little hack
+        map(el => el._1 + "\t" + el._2.toString).mkString("\n")
+    }
+    p.close()
   }
 }
 

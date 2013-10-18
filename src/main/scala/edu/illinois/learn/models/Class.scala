@@ -17,3 +17,19 @@ object CRNs extends Table[CRN]("mdl_enrol_autoroster_section") {
 
   def * = id ~ courseId ~ crn ~ name ~ instructor <> (CRN, CRN.unapply _)
 }
+
+case class Class(dep: String,
+  courseNumber: Int,
+  title: String,
+  crn: Int,
+  classType: String,
+  session: String,
+  time: String,
+  days: String,
+  location: String,
+  instructor: String,
+  credits: String,
+  genEd: Option[String]) {
+
+  def classSpec = dep + "\t" + courseNumber
+}

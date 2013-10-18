@@ -14,7 +14,7 @@ import json
 # this script will be a TSV
 # with the following information
 ####
-YEAR = "2013"
+YEAR = "2012"
 SEMESTER = "fall"
 OUTPUT = "listOfClasses.json"
 HEADERS = ["Department", "CourseNumber", "Title", "CRN", "Type", "Session",
@@ -102,4 +102,4 @@ depUrl = map(lambda x: serverURL + "/" + x, depNames)
 pages = map(loadHTMLURL, depUrl)
 classes = map(getClassesAttributes, pages)
 with open(OUTPUT, "w") as f:
-  f.write(json.dumps(flatten(classes)))
+  map(lambda x: f.write(json.dumps(x) + "\n"), flatten(classes))

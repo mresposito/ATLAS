@@ -4,23 +4,8 @@
 package edu.illinois.learn.classAnalysis
 
 import com.typesafe.scalalogging.slf4j.Logging
+import edu.illinois.learn.models.Class
 import edu.illinois.learn.utils.{JsonClassReader, TSVUtil}
-
-case class Class(dep: String,
-  courseNumber: Int,
-  title: String,
-  crn: Int,
-  classType: String,
-  session: String,
-  time: String,
-  days: String,
-  location: String,
-  instructor: String,
-  credits: String,
-  genEd: Option[String]) {
-
-  def classSpec = dep + "\t" + courseNumber
-}
 
 abstract class ClassAnalysis {
   val name: String
