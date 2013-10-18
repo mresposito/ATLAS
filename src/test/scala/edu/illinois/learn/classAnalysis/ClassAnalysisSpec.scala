@@ -17,23 +17,23 @@ class ClassAnalysisSpec extends Specification {
     val lcs = new Lectures(aasZulu)
 
     "count sessions per departent AAS 100 is 7" in {
-      cls.countSectionsPerClass("AAS\t100") must equalTo(7)
+      cls.countSectionsPerClass("AAS\t100").length must equalTo(7)
     }
     "count sessions per departent AAS 201 is 6" in {
-      cls.countSectionsPerClass("AAS\t201") must equalTo(6)
+      cls.countSectionsPerClass("AAS\t201").length must equalTo(6)
     }
 
     "count AAL is 29" in {
-      cls.countSectionsPerDepartmens("AAS") must equalTo(29)
+      cls.countSectionsPerDepartmens("AAS").length must equalTo(29)
     }
     "count ZULU is 1" in {
-      cls.countSectionsPerDepartmens("ZULU") must equalTo(1)
+      cls.countSectionsPerDepartmens("ZULU").length must equalTo(1)
     }
     "count lectures AAL is 17" in {
-      lcs.countSectionsPerDepartmens("AAS") must equalTo(17)
+      lcs.countSectionsPerDepartmens("AAS").length must equalTo(17)
     }
     "count ZULU lectures is 1" in {
-      lcs.countSectionsPerDepartmens("ZULU") must equalTo(1)
+      lcs.countSectionsPerDepartmens("ZULU").length must equalTo(1)
     }
   }
 

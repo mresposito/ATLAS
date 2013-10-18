@@ -4,7 +4,6 @@
 package edu.illinois.learn.classAnalysis
 
 import com.typesafe.scalalogging.slf4j.Logging
-import java.io.PrintWriter
 
 case class Class(dep: String,
   courseNumber: Int,
@@ -26,24 +25,13 @@ abstract class ClassAnalysis {
   val name: String
   val classes: List[Class]
 
-  def count(a: Map[String, List[Class]]) = a.map(k => (k._1, k._2.length))
+  def countSectionsPerDepartmens = classes.groupBy(_.dep)
 
-  def countSectionsPerDepartmens = count(classes.groupBy(_.dep))
+  def countInstructorPerSession = classes.groupBy(_.instructor)
 
-  def countInstructorPerSession = count(classes.groupBy(_.instructor))
+  def countSectionsPerClass = classes.groupBy(_.classSpec)
 
-  def countSectionsPerClass = count(classes.groupBy(_.classSpec))
-
-  def countLocationPerSession = count(classes.groupBy(_.location))
-
-  def writeResults[A](output: String, results: Map[String, A]) = {
-    val p = new PrintWriter(output, "UTF-8") 
-    p.print {
-      results.toList.sortBy(el => el._2.toString.toInt). // little hack
-        map(el => el._1 + "\t" + el._2.toString).mkString("\n")
-    }
-    p.close()
-  }
+  def countLocationPerSession = classes.groupBy(_.location)
 }
 
 class AllClasses(input: String) extends ClassAnalysis with JsonClassReader {

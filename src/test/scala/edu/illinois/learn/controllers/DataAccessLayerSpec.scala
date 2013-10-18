@@ -7,7 +7,7 @@ package edu.illinois.learn.models
 import org.specs2.mutable._
 import com.typesafe.scalalogging.slf4j.Logging
 
-class ClassAnalysisSpec extends Specification {
+class DataAccessLayerSpec extends Specification {
 
   val dal = new DataAccessLayer 
 
@@ -18,6 +18,13 @@ class ClassAnalysisSpec extends Specification {
 
     "the forum with id 1 should have course == 2" in {
       dal.findForum(1).get.course must beEqualTo(2)
+    }
+
+    "there should be 2135 news" in {
+      dal.countForumType("news").length must beEqualTo(2135)
+    }
+    "there should be 8446 general" in {
+      dal.countForumType("general").length must beEqualTo(8446)
     }
   }
 }
