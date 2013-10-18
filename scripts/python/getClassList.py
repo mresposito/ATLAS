@@ -6,8 +6,8 @@ import os
 import wget
 import itertools
 import multiprocessing
+import json
 ## multi core baby
-pool = multiprocessing.Pool()
 
 ####
 # Output of 
@@ -16,7 +16,7 @@ pool = multiprocessing.Pool()
 ####
 YEAR = "2013"
 SEMESTER = "fall"
-OUTPUT = "listOfClasses.tsv"
+OUTPUT = "listOfClasses.json"
 HEADERS = ["Department", "CourseNumber", "Title", "CRN", "Type", "Session",
     "Time", "Days", "Location", "Instructor", "Credits", "Gen Ed"]
 
@@ -46,14 +46,19 @@ def getClassesAttributes(page):
   return flatten(map(scrapeClass, names))
 
 def scrapeClass(info):
-  subjectCode, number, courseTitle = info
-  url = serverURL  +"/" + subjectCode + "/" + number
-  page = loadHTMLURL(url)
-  credits = findCredit(page)
-  genEds = findGenEd(page)
-  classAttributes = findClassInfo(page)
-  additionalInfo = [subjectCode, number, courseTitle] 
-  return map(lambda x:additionalInfo + x + credits + genEds, classAttributes)
+  try:
+    subjectCode, number, courseTitle = info
+    print subjectCode + " " + number
+    url = serverURL  +"/" + subjectCode + "/" + number
+    page = loadHTMLURL(url)
+    credits = findCredit(page)
+    genEds = findGenEd(page)
+    classAttributes = findClassInfo(page)
+    additionalInfo = {"dep": subjectCode, "courseNumber": int(number),
+        "title": courseTitle, "credits": credits}
+    return map(lambda x:dict(additionalInfo.items() + x.items() + genEds.items()), classAttributes)
+  except:
+    return []
 
 def findGenEd(page):
   p = page.find_all("p", {"class", "portlet-padtop10"})
@@ -65,28 +70,36 @@ def findGenEd(page):
     normalize = filter(lambda x: len(x) > 2, normalize)
     normalize = map(lambda x:x.replace(":", "").replace("and", ""). replace("UIUC", "").replace("course",""), normalize)
     normalize = map(trim, normalize)
-    return [" ".join(normalize)]
+    return {"genEd": " ".join(normalize)}
   else:
-    return [""]
+    return {}
 
 def findCredit(page):
   p = page.find_all("p", {"class", "portlet-padtop10"})
   credits = filter(lambda x:"Credit" in x.prettify(), p)
-  return map(lambda x: x.text.split()[1], credits)
+  return credits[0].text.split()[1]
 
 def findClassInfo(page):
-  divs = page.find_all("div", {"class", "section-meeting"})
-  allClassInfo = map(normalizeString , divs)
-  split =  split_list(allClassInfo, len(allClassInfo)/8)
-  return map(lambda x:x[2:], split)
+  def info(tr):
+    trim = lambda x: " ".join(x.split())
+    parse = lambda x,y: trim(tr.find_all("td", {"class": x})[y].text)
+    return {"crn": int(parse("w50", 1)),
+        "classType": parse("w80",0),
+        "session": parse("w55",0),
+        "time": parse("w75", 0),
+        "days": parse("w55", 1),
+        "location": parse("w120", 0),
+        "instructor": parse("ie-table-width", 0)}
+  trs = page.find_all("tr", {"class", "table-item"})
+  return map(info, trs)
 
 subjectPage = loadHTMLURL(serverURL)
 departmentLinks = subjectPage.find_all("td")
 departments = map(lambda x:x.get("title"), departmentLinks)
 depNames = filter(lambda x:x != None, departments)
+# depNames = ["AAS", "ZULU"]
 depUrl = map(lambda x: serverURL + "/" + x, depNames)
 pages = map(loadHTMLURL, depUrl)
 classes = map(getClassesAttributes, pages)
 with open(OUTPUT, "w") as f:
-  f.write("\t".join(HEADERS) + "\n")
-  map(lambda x:f.write("\t".join(x) + "\n"), flatten(classes))
+  f.write(json.dumps(flatten(classes)))
