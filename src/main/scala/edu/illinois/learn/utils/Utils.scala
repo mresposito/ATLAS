@@ -1,12 +1,13 @@
 /*
  * Author: Michele Esposito 
  */
-package edu.illinois.learn.classAnalysis
+package edu.illinois.learn.utils
 
 import scala.io.Source
 import java.io.File
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import edu.illinois.learn.classAnalysis.Class
 
 trait TSVUtil {
 

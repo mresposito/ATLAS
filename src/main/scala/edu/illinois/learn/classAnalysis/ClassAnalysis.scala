@@ -4,6 +4,7 @@
 package edu.illinois.learn.classAnalysis
 
 import com.typesafe.scalalogging.slf4j.Logging
+import edu.illinois.learn.utils.{JsonClassReader, TSVUtil}
 
 case class Class(dep: String,
   courseNumber: Int,
