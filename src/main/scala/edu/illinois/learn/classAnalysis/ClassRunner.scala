@@ -23,7 +23,7 @@ class RunWrapper[A <: ClassAnalysis](val cls: List[A], val output: String = "res
 
 object ClassRunner {
   def main(args: Array[String]) = {
-    val classData = "data/AASZULUClasses.json"
+    val classData = "data/listOfClasses.json"
     val wrapper = new RunWrapper(
       List(new AllClasses(classData), new Lectures(classData),
         new GenEds(classData), new Online(classData)))

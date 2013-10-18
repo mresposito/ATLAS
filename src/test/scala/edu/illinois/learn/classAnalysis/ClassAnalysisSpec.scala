@@ -43,7 +43,7 @@ class ClassAnalysisSpec extends Specification {
     }
 
     "loading full list" in {
-      new Online(aasZulu).classes.length must equalTo(63)
+      new Online("data/listOfClasses.json").classes.length must equalTo(63)
     }
   }
 }

@@ -22,8 +22,7 @@ trait TSVUtil {
 trait JsonClassReader {
   implicit val formatters = DefaultFormats
   
-  def loadClasses(input: String): List[Class] = {
-    val json = parse(Source.fromFile(input).getLines.next)
-    json.extract[List[Class]]
-  }
+  def loadClasses(input: String): List[Class] = for {
+    line <- Source.fromFile(input).getLines.toList
+  } yield parse(line).extract[Class]
 }
