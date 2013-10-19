@@ -52,20 +52,8 @@ class DataAccessLayerSpec extends Specification {
     "find forum discussion with id 1 must have courseId" in {
       dal.findForumDiscussion(1).get.courseId must beEqualTo(4)
     }
-
-    "find forum post with id 1 must have discussionId" in {
-      dal.findForumPost(1).get.discussionId must beEqualTo(1)
-    }
-
-    "forum info with id 2 should be a forum" in {
-      dal.findForumInfo(2).isDefined must beTrue
-    }
-    "forum info with id 2 has 1 discussion" in {
-      dal.findForumInfo(2).get.discussions.length must beEqualTo(1)
-      dal.findForumInfo(2).get.discussions.head.id must beEqualTo(5634)
-    }
-    "forum info with id 2 has 1 post" in {
-      dal.findForumInfo(2).get.posts.length must beEqualTo(1)
+    "forum info with id 1 has no post" in {
+      dal.findPostsPerClass(1).length must beEqualTo(0)
     }
   }
 }

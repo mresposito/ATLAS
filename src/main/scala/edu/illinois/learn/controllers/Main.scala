@@ -15,9 +15,9 @@ object ClassRunner extends TSVUtil  {
   def main(args: Array[String]) = {
     val classData = "data/listOfClasses.json"
     val all = new AllClasses(classData)
-    val wrapper = new RunWrapper(
-      List(all, new Lectures(classData),
-        new GenEds(classData), new Online(classData)))
+    val classes = List(all, new Lectures(classData),
+      new GenEds(classData), new Online(classData))
+    val wrapper = new RunWrapper(classes)
     val dal = new DataAccessLayer
 
     wrapper.run(_.countSectionsPerDepartmens, "SectionsPerDepartments")
@@ -32,5 +32,8 @@ object ClassRunner extends TSVUtil  {
     writeResults("forumsCountPerDepartment", dal.joinCourses(all.classes).groupBy {
       case (k,v) => k.dep
     })
+    print("All Classes")
+    val allCFA = new ClassForumAnalysis(all.classes)
+    writeResultsCounted("postsPerClass", allCFA.postsPerClass)
   }
 }

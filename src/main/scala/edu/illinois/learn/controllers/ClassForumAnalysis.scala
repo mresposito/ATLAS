@@ -7,7 +7,13 @@ case class ClassForum(cls: Class, forums: List[ForumInfo])
 
 class ClassForumAnalysis(val classes: List[Class]) {
   val dal = new DataAccessLayer
-  val classId = classes.map { cls => 
-    ClassForum(cls, dal.findForumsByCRN(cls.crn).map(dal.buildForumInfo))
+
+  val validCourses = classes.filter { cls =>
+    dal.getCourseId(cls.crn).isDefined
   }
+
+  def postsPerClass = validCourses.map { cls =>
+    (cls.classSpec,
+      dal.findPostsPerClass(dal.getCourseId(cls.crn).get))
+  }.toMap
 }

@@ -22,9 +22,13 @@ trait TSVUtil {
   def count[B](a: Map[String, List[B]]): Map[String, Int] = a.map(k => (k._1, k._2.length))
 
   def writeResults[B](path: String, results: Map[String, List[B]], output: String = "results/") = {
+    writeResultsCounted(path, count(results))
+  }
+  
+  def writeResultsCounted[B](path: String, results: Map[String, B], output: String = "results/") = {
     val p = new PrintWriter(output + path + ".tsv", "UTF-8")
     p.print {
-      count(results).toList.sortBy(el => el._2.toString.toInt). // little hack
+      results.toList.sortBy(el => el._2.toString.toInt). // little hack
         map(el => el._1 + "\t" + el._2.toString).mkString("\n")
     }
     p.close()

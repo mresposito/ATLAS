@@ -14,7 +14,7 @@ class DataAccessLayer {
     Query(Forums).list.groupBy(_.forumType)
   }
 
-  def joinCourses(courses: List[Class]) = connection withSession { 
+  def joinCourses(courses: List[Class]): List[(Class, Forum)] = connection withSession { 
     val q = for {
       f <- Forums
       c <- CRNs if f.courseId === c.courseId
@@ -42,25 +42,11 @@ class DataAccessLayer {
     Query(ForumDiscussions).filter(_.id === id).firstOption
   }
 
-  def buildForumInfo(forum: Forum) = connection withSession {
-    val disc = Query(ForumDiscussions).filter(_.forumId is forum.id).list
-    val posts = disc.flatMap{ discussion =>
-      Query(ForumPosts).filter(_.discussionId is discussion.id).list
-    }
-    ForumInfo(forum, disc, posts)
-  }
-
-  def findForumInfo(id: Long) = connection withSession {
-    val forum = findForum(id)
-    if(forum.isDefined) {
-      Some(buildForumInfo(forum.get))
-    } else {
-      None
-    }
-  }
-
-  def findForumsByCRN(crn: Int) = connection withSession {
-    val courseId = getCourseId(crn)
-    Query(Forums).filter(_.courseId === courseId).list
+  def findPostsPerClass(courseId: Long): Int = connection withSession {
+    (for {
+      f <- Forums if f.courseId is courseId
+      d <- ForumDiscussions if f.id is d.forumId
+      p <- ForumPosts if p.discussionId is d.id 
+    } yield p).list.length
   }
 }

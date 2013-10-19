@@ -5,8 +5,8 @@ import java.sql.Timestamp
 
 case class ForumInfo(
   meta: Forum,
-  discussions: List[ForumDiscussion],
-  posts: List[ForumPost])
+  discussion: ForumDiscussion,
+  post: ForumPost)
 
 case class Forum(
   id: Long,
