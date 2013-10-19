@@ -58,4 +58,9 @@ class DataAccessLayer {
       None
     }
   }
+
+  def findForumsByCRN(crn: Int) = connection withSession {
+    val courseId = getCourseId(crn)
+    Query(Forums).filter(_.courseId === courseId).list
+  }
 }
