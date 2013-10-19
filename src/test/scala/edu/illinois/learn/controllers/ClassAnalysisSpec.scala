@@ -1,7 +1,7 @@
 /*
  * Author: Michele Esposito 
  */
-package edu.illinois.learn.classAnalysis
+package edu.illinois.learn.controllers
 
 // Specs2
 import org.specs2.mutable._

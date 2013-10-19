@@ -30,6 +30,10 @@ class DataAccessLayer {
     Query(CRNs).filter(_.courseId === courseId).map(_.crn).firstOption
   }
 
+  def getCourseId(crn: Int) = connection withSession {
+    Query(CRNs).filter(_.crn === crn).map(_.courseId).firstOption
+  }
+
   def findForumPost(id: Long) = connection withSession {
     Query(ForumPosts).filter(_.id === id).firstOption
   }
@@ -38,14 +42,18 @@ class DataAccessLayer {
     Query(ForumDiscussions).filter(_.id === id).firstOption
   }
 
+  def buildForumInfo(forum: Forum) = connection withSession {
+    val disc = Query(ForumDiscussions).filter(_.forumId is forum.id).list
+    val posts = disc.flatMap{ discussion =>
+      Query(ForumPosts).filter(_.discussionId is discussion.id).list
+    }
+    ForumInfo(forum, disc, posts)
+  }
+
   def findForumInfo(id: Long) = connection withSession {
     val forum = findForum(id)
     if(forum.isDefined) {
-      val disc = Query(ForumDiscussions).filter(_.forumId is id).list
-      val posts = disc.flatMap{ discussion =>
-        Query(ForumPosts).filter(_.discussionId is discussion.id).list
-      }
-      Some(ForumInfo(forum.get, disc, posts))
+      Some(buildForumInfo(forum.get))
     } else {
       None
     }

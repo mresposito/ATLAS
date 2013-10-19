@@ -32,9 +32,15 @@ class DataAccessLayerSpec extends Specification {
     "classID 249 -> crn 30560" in {
       dal.getCRN(249).get must beEqualTo(30560)
     }
-
     "classID 213 -> crn 32294" in {
       dal.getCRN(213).get must beEqualTo(32294)
+    }
+    "crn 30560 -> classID 249" in {
+      dal.getCourseId(30560).get must beEqualTo(249)
+    }
+
+    "crn 32294 -> classID 213" in {
+      dal.getCourseId(32294).get must beEqualTo(213)
     }
 
     "classID non existisng should be none" in {

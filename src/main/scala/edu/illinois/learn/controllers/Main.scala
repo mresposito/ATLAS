@@ -1,8 +1,7 @@
-package edu.illinois.learn.main
+package edu.illinois.learn.controllers
 
 import edu.illinois.learn.models.DataAccessLayer
 import edu.illinois.learn.models.Class
-import edu.illinois.learn.classAnalysis._
 import edu.illinois.learn.utils.TSVUtil
 
 class RunWrapper[A <: ClassAnalysis](val cls: List[A]) extends TSVUtil {

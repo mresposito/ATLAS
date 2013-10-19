@@ -1,7 +1,7 @@
 /*
  * Author: Michele Esposito 
  */
-package edu.illinois.learn.classAnalysis
+package edu.illinois.learn.controllers
 
 import com.typesafe.scalalogging.slf4j.Logging
 import edu.illinois.learn.models.Class
