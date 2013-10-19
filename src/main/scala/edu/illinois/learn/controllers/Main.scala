@@ -15,8 +15,9 @@ class RunWrapper[A <: ClassAnalysis](val cls: List[A]) extends TSVUtil {
 object ClassRunner extends TSVUtil  {
   def main(args: Array[String]) = {
     val classData = "data/listOfClasses.json"
+    val all = new AllClasses(classData)
     val wrapper = new RunWrapper(
-      List(new AllClasses(classData), new Lectures(classData),
+      List(all, new Lectures(classData),
         new GenEds(classData), new Online(classData)))
     val dal = new DataAccessLayer
 
@@ -25,6 +26,12 @@ object ClassRunner extends TSVUtil  {
     wrapper.run(_.countSectionsPerClass, "SectionsPerClass")
     wrapper.run(_.countLocationPerSession, "LocationPerSection")
     
-    writeResults("forumPerClass", dal.countForumType)
+    writeResults("forumTypes", dal.countForumType)
+    writeResults("forumsCountPerSection", dal.joinCourses(all.classes).groupBy {
+      case (k,v) => k.classSpec
+    })
+    writeResults("forumsCountPerDepartment", dal.joinCourses(all.classes).groupBy {
+      case (k,v) => k.dep
+    })
   }
 }
