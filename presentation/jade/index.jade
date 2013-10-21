@@ -66,109 +66,37 @@ html(lang='en')
           h2 Data about UIUC courses 
           p
             | Some results after analyzing the list of all courses:
-        section(data-transition='linear', data-background-transition='slide')
-          section
-            h2 All courses
-            ul
-              li
-                strong.allClassesSections
-                | Sections
-              li
-                strong.allClassesClasses
-                | courses
-              li
-                strong.allClassesDep
-                | Departments
-          section
-            h2 Courses sections per department
-            p
-              | Average sections per department:
-              strong.allClassesSectionsPerDepartments
-            canvas#allClassesSectionsPerDepartments(width='800', height='400')
-          section
-            h2 Courses per department
-            p
-              | Average courses per department:
-              strong.allClassesClassesPerDepartments
-            canvas#allClassesClassesPerDepartment(width='800', height='400')
-        section(data-transition='linear', data-background-transition='slide')
-          section
-            h2 Gen Eds
-            ul
-              li
-                strong.genEdsSections
-                | Sections
-              li
-                strong.genEdsClasses
-                | Classes
-              li
-                strong.genEdsDep
-                | Departments
-          section
-            h2 Gen eds sections per department
-            p
-              | Average gen ed per department:
-              strong.genEdsSectionsPerDepartments
-            canvas#genEdsSectionsPerDepartments(width='800', height='400')
-          section
-            h2 Gen eds classes per department
-            p
-              | Average gen ed classes per department:
-              strong.gensEdClassesPerDepartments
-            canvas#genEdsClassesPerDepartment(width='800', height='400')
-        section
-          section(data-background='#007777')
-            h2 Classes on moodle
-            ul
-              li
-                strong.moodleSections
-                | Sections
-              li
-                strong.moodleClasses
-                | Classes
-              li
-                strong.moodleDep
-                | Departments
-          section
-            h2 Moodle sections per department
-            p
-              | Average sections per department:
-              strong.moodleSectionsPerDepartments
-            canvas#moodleSectionsPerDepartments(width='800', height='400')
-          section
-            h2 Moodle classes per department
-            p
-              | Average classes per department:
-              strong.moodleClassesPerDepartment
-            canvas#moodleClassesPerDepartment(width='800', height='400')
+        - var courses = { "allClasses": "All courses", "genEds": "General Education Courses", "moodle": "Moodle classes", "moodleGenEd": "General Education Courses on Moodle" }
+        - each title, tag in courses
+          section(data-transition='linear', data-background-transition='slide')
+            section
+              h2 #{title}
+              ul
+                li
+                  strong(class=tag + 'Sections')
+                  |    Sections
+                li
+                  strong(class=tag + 'Classes')  
+                  |   Courses
+                li
+                  strong(class=tag + 'Dep') 
+                  |   Departments
+            section
+              h2 Sections per department
+              p
+                | Average sections per department:
+                strong(class=tag + 'SectionsPerDepartments')
+              canvas(id=tag + 'SectionsPerDepartments', width='800', height='400')
+            section
+              h2 Courses per department
+              p
+                | Average courses per department:
+                strong(class=tag + 'ClassesPerDepartment')
+              canvas(id=tag + 'ClassesPerDepartment', width='800', height='400')
+
         section
           section
-            h2 Gen Eds on moodle
-            ul
-              li
-                strong.moodleGenEdSections
-                | Sections
-              li
-                strong.moodleGenEdClasses
-                | Classes
-              li
-                strong.moodleGenEdDep
-                | Departments
-          section
-            h2 Moodle gen ed sections per department
-            p
-              | Average sections per department:
-              strong.moodleGenEdSectionsPerDepartments
-            canvas#moodleGenEdSectionsPerDepartments(width='800', height='400')
-          section
-            h2 Moodle gen ed classes per department
-            p
-              | Average classes per department:
-              strong.moodleGenEdClassesPerDepartment
-            canvas#moodleGenEdClassesPerDepartment(width='800', height='400')
-        section
-          section
-            h2 Forums
+            h2 aosnteihasontehis
             ul
               li
                 strong.forumCount
