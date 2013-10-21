@@ -23,8 +23,8 @@ var dataset = function(xs, idx) {
   return _.map(xs, function(el) { return parseInt(el[1])})
 }
 
-var renderGraph = function(path, tag, callback) {
-  d3Load(path, function(data) {
+var renderGraph = function(tag, callback) {
+  d3Load(tag + ".tsv", function(data) {
     if (callback) {
       callback(data)
     }
@@ -47,39 +47,20 @@ var renderGraph = function(path, tag, callback) {
     new Chart(ctx).Bar(data);
   });
 }
-// all classes graphs
-renderGraph("allClassesLocationPerSection.tsv", "allClassesPerLocation", function(data) {
-  $(".allClassSections").text(sum(dataset(data)));
-});
-
-renderGraph("allClassesSectionsPerDepartments.tsv", "allClassesSectionsPerDepartments")
-renderGraph("allClassesClassesPerDepartment.tsv", "allClassesClassesPerDepartments", function(data) {
-  $(".allClassCount").text(sum(dataset(data)));
-  $(".allClassDep").text(data.length);
-});
-// genEd graphs
-renderGraph("genEdsSectionsPerDepartments.tsv", "genEdSectionsPerDepartment", function(data) {
-  $(".genEdSectionCount").text(sum(dataset(data)));
-})
-renderGraph("genEdsClassesPerDepartment.tsv", "genEdClassesPerDepartment", function(data) {
-  $(".genEdClassCount").text(sum(dataset(data)));
-  $(".genEdDepCount").text(data.length);
-})
 
 var renderClassGraphs = function(tag) {
   var cls = "." + tag
-  renderGraph(tag + "SectionsPerDepartments.tsv", tag + "SectionsPerDepartments", function(data) {
+  renderGraph(tag + "SectionsPerDepartments", function(data) {
     $(cls + "Sections").text(sum(dataset(data)));
   })
-  renderGraph(tag + "ClassesPerDepartment.tsv", tag + "ClassesPerDepartment", function(data) {
+  renderGraph(tag + "ClassesPerDepartment", function(data) {
     $(cls + "Classes").text(sum(dataset(data)));
     $(cls + "Dep").text(data.length);
   })
 }
 
-renderClassGraphs("moodle")
-renderClassGraphs("moodleGenEd")
+_.map(["allClasses", "genEds", "moodle", "moodleGenEd"], renderClassGraphs);
 
-renderGraph("forumTypes.tsv", "forumTypes", function(data) {
+renderGraph("forumTypes", function(data) {
   $("strong.forumCount").text(sum(dataset(data)));
 });
