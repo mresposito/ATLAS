@@ -31,3 +31,6 @@ dist
 /RUNNING_PID
 /.settings
 results
+# ignore HTML (we use jade)
+presentation/node_modules
+*.html
