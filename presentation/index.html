@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+    <title>ATLAS | Forum analysis</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/beige.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+<body>
+
+  <div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+      <section>
+        <h1>Learn.illinois.edu</h1>
+        <h3>How Moodle forums are being used</h3>
+        <p>
+          <small>Presentation by <a href="http://www.micheleresposito.com">Michele Esposito</a></small>
+        </p>
+      </section>
+
+      <section>
+        <section>
+        <h2>Problem</h2>
+        <p>
+          We do not know how students interact with our website
+        </p>
+        </section>
+        <section>
+          <h2>How to solve it</h2> 
+          <p>
+            Data mining!
+          </p>
+        </section>
+      </section>
+
+      <section>
+        <h2>The idea</h2>
+        <p>
+          Understand how forums are used across different classes
+          by looking at data
+        </p>
+      </section>
+
+      <section >
+        <section data-background="#007777">
+          <h1>The process</h1>
+          <p>
+            How I came up with the conclusions
+          </p>
+        </section>
+
+        <section>
+          <h2>Get the list of classes</h2>
+          <p>
+            Obtain the whole Fall 2012 
+            class catalogue<br>
+            from <a href="http://courses.illinois.edu/cis/2012/fall/schedule/">courses.illinois.edu</a>
+          <p>
+        </section>
+        <section>
+          <h2>Obtain the database from Moodle</h2>
+          <p>
+            And start digging inside the data
+          <p>
+        </section>
+        <section>
+          <h2>Cross the data!</h2>
+          <p>
+            Merge the two sources in order to get more results
+          <p>
+        </section>
+      </section>
+
+
+      <section data-background="#007777" >
+        <h2>Data about UIUC courses </h2>
+        <p>
+          Some results after analyzing the list of all courses:
+        </p>
+      </section>
+
+      <section data-transition="linear" data-background-transition="slide">
+        <section>
+          <h2>All courses</h2>
+          <ul>
+            <li>
+              <strong class="allClassSections"></strong>
+              Sections
+            </li>
+            <li>
+              <strong class="allClassCount"></strong>
+              courses
+            </li>
+            <li><strong class="allClassDep"></strong> Departments</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Courses sections per department</h2>
+          <p>
+            Average sections per department: 
+            <strong class="allClassesSectionsPerDepartments"></strong>
+          </p>
+          <canvas id="allClassesSectionsPerDepartments" width="800" height="400"></canvas>
+        </section>
+
+        <section>
+          <h2>Courses per department</h2>
+          <p>
+            Average courses per department: 
+            <strong class="allClassesClassesPerDepartments"></strong>
+          </p>
+          <canvas id="allClassesClassesPerDepartments" width="800" height="400"></canvas>
+        </section>
+      </section>
+
+      <section data-transition="linear" data-background-transition="slide">
+        <section>
+          <h2>Gen Eds</h2>
+          <ul>
+            <li>
+              <strong class="genEdSectionCount"></strong>
+              Sections</li>
+            <li> 
+              <strong class="genEdClassCount"></strong>
+              Classes
+            </li>
+            <li>
+              <strong class="genEdDepCount"></strong>
+              Departments
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Gen eds sections per department</h2>
+          <p>
+            Average gen ed per department: 
+            <strong class="genEdSectionsPerDepartment"></strong>
+          </p>
+          <canvas id="genEdSectionsPerDepartment" width="800" height="400"></canvas>
+        </section>
+
+        <section>
+          <h2>Gen eds classes per department</h2>
+          <p>
+            Average gen ed per department: 
+            <strong class="genEdClassesPerDepartment"></strong>
+          </p>
+          <canvas id="genEdClassesPerDepartment" width="800" height="400"></canvas>
+        </section>
+      </section>
+
+      <section>
+        <section data-background="#007777">
+          <h2>Classes on moodle</h2>
+          <ol>
+        <!--   <ul> -->
+        <!--     <li>62 classes</li> -->
+        <!--     <li> Classes</li> -->
+        <!--     <li>Departments</li> -->
+        <!--   </ul> -->
+          </ol>
+        </section>
+        <section>
+          <h2>Gen eds on moodle</h2>
+          <ol>
+        <!--     <li>62 classes</li> -->
+        <!--     <li> Classes</li> -->
+        <!--     <li>Departments</li> -->
+          </ol>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.min.js"></script>
+
+  <script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      history: true,
+      center: true,
+
+      theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+      transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+      // Optional libraries used to extend on reveal.js
+      dependencies: [
+        { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+        { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+      ]
+    });
+
+  </script>
+  <script src="lib/js/jquery-2.0.3.min.js"></script>
+  <script src="lib/js/underscore-min.js"></script>
+  <script src="lib/js/Chart.min.js"></script>
+  <script src="lib/js/d3.min.js"></script>
+  <script src="js/graph.js"></script>
+
+
+</body>
+</html>
