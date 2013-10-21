@@ -53,7 +53,7 @@ class DataAccessLayerSpec extends Specification {
       dal.findForumDiscussion(1).get.courseId must beEqualTo(4)
     }
     "forum info with id 1 has no post" in {
-      dal.findPostsPerClass(1).length must beEqualTo(0)
+      dal.findPostsPerClass(1) must beEqualTo(0)
     }
   }
 }

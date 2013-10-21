@@ -17,8 +17,6 @@ import json
 YEAR = "2012"
 SEMESTER = "fall"
 OUTPUT = "listOfClasses.json"
-HEADERS = ["Department", "CourseNumber", "Title", "CRN", "Type", "Session",
-    "Time", "Days", "Location", "Instructor", "Credits", "Gen Ed"]
 
 serverURL = "https://courses.illinois.edu/cisapp/dispatcher/schedule/%s/%s" % (YEAR, SEMESTER)
 normalizeString = lambda x:" ".join(x.text.split())

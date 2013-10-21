@@ -17,6 +17,9 @@ abstract class ClassAnalysis {
 
   def countSectionsPerClass = classes.groupBy(_.classSpec)
 
+  def countClassesPerDepartment = classes.groupBy(_.dep).
+    map{ case(k,v) => (k, v.groupBy(_.classSpec).size) }
+
   def countLocationPerSession = classes.groupBy(_.location)
 }
 
@@ -49,4 +52,8 @@ class Online(input: String) extends ClassAnalysis with TSVUtil with JsonClassRea
   val classes = loadClasses(input).filter{ cls =>
     onlineCrn contains cls.crn
   }
+}
+
+class Moodle(val classes: List[Class]) extends ClassAnalysis {
+  val name = "moodle"
 }
