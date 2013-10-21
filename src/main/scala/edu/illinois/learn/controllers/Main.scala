@@ -20,8 +20,8 @@ object ClassRunner extends TSVUtil with JsonClassReader {
     val classData = "data/listOfClasses.json"
     val dal = new DataAccessLayer
     val classesFromJson = loadClasses(classData)
-
     val all = ClassLoader.loadAll(classesFromJson)
+
     val genEds = new ClassAnalysis("genEds", ClassLoader.genEds(classesFromJson))
     val moodle = new ClassAnalysis("moodle", all.classes.filter{ el =>
       dal.getCourseId(el.crn).isDefined 
@@ -31,28 +31,38 @@ object ClassRunner extends TSVUtil with JsonClassReader {
     val moodleGenEd = new ClassAnalysis("moodleGenEd",
       ClassLoader.genEds(moodle.classes)
     )
-  
-    val classes = List(all, moodle, genEds, moodleGenEd,
-      lecture, online)
-    val wrapper = new RunWrapper(classes)
+    // run the analysis on all the classes
+    executeClassAnalysis(List(all, moodle, genEds, moodleGenEd,
+      lecture, online))
+    // start forum analysis    
+    writeResults("forumTypes", dal.countForumType)
 
+    print("All Classes")
+
+    executeForumAnalysis(List(new ClassForumAnalysis(moodle),
+      new ClassForumAnalysis(moodleGenEd)))
+  }
+
+  def executeForumAnalysis(forums: List[ClassForumAnalysis]) = {
+    def run[A](fun: ClassForumAnalysis => Map[String, List[A]],
+      jobName: String): Unit = forums.map { a: ClassForumAnalysis =>
+      writeResults(a.name + "Forum" + jobName, fun(a))
+    }
+    def runCounted(fun: ClassForumAnalysis => Map[String, Int],
+      jobName: String): Unit = forums.map { a: ClassForumAnalysis =>
+      writeResultsCounted(a.name + "Forum" + jobName, fun(a))
+    }
+    run(_.forumCountPerSection, "PerSection")
+    run(_.forumCountPerDepartment, "PerDepartment")
+    runCounted(_.postsPerClass, "PostsPerClass")
+  }
+
+  def executeClassAnalysis(classes: List[ClassAnalysis]) = {
+    val wrapper = new RunWrapper(classes)
     wrapper.run(_.countLocationPerSession, "LocationPerSection")
     wrapper.run(_.countInstructorPerSession, "InstuctorPerSection")
     wrapper.run(_.countSectionsPerDepartmens, "SectionsPerDepartments")
     wrapper.run(_.countSectionsPerClass, "SectionsPerClass")
     wrapper.runCounted(_.countClassesPerDepartment, "ClassesPerDepartment")
-    // start forum analysis    
-    writeResults("forumTypes", dal.countForumType)
-    writeResults("forumsCountPerSection", dal.joinCourses(moodle.classes).groupBy {
-      case (k,v) => k.classSpec
-    })
-    writeResults("forumsCountPerDepartment", dal.joinCourses(moodle.classes).groupBy {
-      case (k,v) => k.dep
-    })
-    // start joins. Sloow 
-    print("All Classes")
-    val allCFA = new ClassForumAnalysis(moodle.classes)
-
-    writeResultsCounted("postsPerClass", allCFA.postsPerClass)
   }
 }

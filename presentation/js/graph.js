@@ -79,5 +79,7 @@ var renderClassGraphs = function(tag) {
 
 renderClassGraphs("moodle")
 renderClassGraphs("moodleGenEd")
-// classes on moodle
-// genEds on moodle
+
+renderGraph("forumTypes.tsv", "forumTypes", function(data) {
+  $("strong.forumCount").text(sum(dataset(data)));
+});
