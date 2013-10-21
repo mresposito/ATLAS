@@ -172,24 +172,76 @@
       <section>
         <section data-background="#007777">
           <h2>Classes on moodle</h2>
-          <ol>
-        <!--   <ul> -->
-        <!--     <li>62 classes</li> -->
-        <!--     <li> Classes</li> -->
-        <!--     <li>Departments</li> -->
-        <!--   </ul> -->
-          </ol>
+          <ul>
+            <li>
+              <strong class="moodleSections"></strong> Sections
+            </li>
+            <li> 
+              <strong class="moodleClasses"></strong>
+              Classes
+            </li>
+            <li>
+              <strong class="moodleDep"></strong>
+              Departments
+            </li>
+          </ul>
         </section>
+        
         <section>
-          <h2>Gen eds on moodle</h2>
-          <ol>
-        <!--     <li>62 classes</li> -->
-        <!--     <li> Classes</li> -->
-        <!--     <li>Departments</li> -->
-          </ol>
+          <h2>Moodle sections per department</h2>
+          <p>
+            Average sections per department: 
+            <strong class="moodleSectionsPerDepartments"></strong>
+          </p>
+          <canvas id="moodleSectionsPerDepartments" width="800" height="400"></canvas>
+        </section>
+
+        <section>
+          <h2>Moodle classes per department</h2>
+          <p>
+            Average classes per department: 
+            <strong class="moodleClassesPerDepartment"></strong>
+          </p>
+          <canvas id="moodleClassesPerDepartment" width="800" height="400"></canvas>
         </section>
       </section>
 
+      <section>
+        <section>
+          <h2>Gen Eds on moodle</h2>
+          <ul>
+            <li>
+              <strong class="moodleGenEdSections"></strong> Sections
+            </li>
+            <li> 
+              <strong class="moodleGenEdClasses"></strong>
+              Classes
+            </li>
+            <li>
+              <strong class="moodleGenEdDep"></strong>
+              Departments
+            </li>
+          </ul>
+        </section>
+        
+        <section>
+          <h2>Moodle gen ed sections per department</h2>
+          <p>
+            Average sections per department: 
+            <strong class="moodleGenEdSectionsPerDepartments"></strong>
+          </p>
+          <canvas id="moodleGenEdSectionsPerDepartments" width="800" height="400"></canvas>
+        </section>
+
+        <section>
+          <h2>Moodle gen ed classes per department</h2>
+          <p>
+            Average classes per department: 
+            <strong class="moodleGenEdClassesPerDepartment"></strong>
+          </p>
+          <canvas id="moodleGenEdClassesPerDepartment" width="800" height="400"></canvas>
+        </section>
+      </section>
     </div>
   </div>
 

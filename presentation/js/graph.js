@@ -65,3 +65,19 @@ renderGraph("genEdsClassesPerDepartment.tsv", "genEdClassesPerDepartment", funct
   $(".genEdClassCount").text(sum(dataset(data)));
   $(".genEdDepCount").text(data.length);
 })
+
+var renderClassGraphs = function(tag) {
+  var cls = "." + tag
+  renderGraph(tag + "SectionsPerDepartments.tsv", tag + "SectionsPerDepartments", function(data) {
+    $(cls + "Sections").text(sum(dataset(data)));
+  })
+  renderGraph(tag + "ClassesPerDepartment.tsv", tag + "ClassesPerDepartment", function(data) {
+    $(cls + "Classes").text(sum(dataset(data)));
+    $(cls + "Dep").text(data.length);
+  })
+}
+
+renderClassGraphs("moodle")
+renderClassGraphs("moodleGenEd")
+// classes on moodle
+// genEds on moodle

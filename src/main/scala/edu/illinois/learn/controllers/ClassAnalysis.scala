@@ -57,3 +57,6 @@ class Online(input: String) extends ClassAnalysis with TSVUtil with JsonClassRea
 class Moodle(val classes: List[Class]) extends ClassAnalysis {
   val name = "moodle"
 }
+class MoodleGenEd(val classes: List[Class]) extends ClassAnalysis {
+  val name = "moodleGenEd"
+}

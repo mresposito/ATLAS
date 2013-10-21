@@ -24,8 +24,11 @@ object ClassRunner extends TSVUtil  {
     val moodle = new Moodle(all.classes.filter{ el =>
       dal.getCourseId(el.crn).isDefined 
     })
+    val moodleGenEd = new MoodleGenEd(
+      moodle.classes.filter(_.genEd.isDefined)
+    )
   
-    val classes = List(all, moodle, genEds, 
+    val classes = List(all, moodle, genEds, moodleGenEd,
       new Lectures(classData), new Online(classData))
     val wrapper = new RunWrapper(classes)
 
