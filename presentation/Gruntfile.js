@@ -103,8 +103,25 @@ module.exports = function(grunt) {
 			theme: {
 				files: [ 'css/theme/source/*.scss', 'css/theme/template/*.scss' ],
 				tasks: 'themes'
-			}
-		}
+			},
+      jade: {
+				files: [ 'jade/*.jade' ],
+				tasks: 'jadeTask'
+      }
+		},
+
+    jade: {
+      compile: {
+        options: {
+          data: {
+            debug: false
+          }
+        },
+        files: {
+          "index.html": ["jade/index.jade"]
+        }
+      }
+    }
 
 	});
 
@@ -116,10 +133,14 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
 	grunt.loadNpmTasks( 'grunt-contrib-sass' );
 	grunt.loadNpmTasks( 'grunt-contrib-connect' );
+	grunt.loadNpmTasks( 'grunt-contrib-jade' );
 	grunt.loadNpmTasks( 'grunt-zip' );
 
 	// Default task
 	grunt.registerTask( 'default', [ 'jshint', 'cssmin', 'uglify', 'qunit' ] );
+    
+  // jade
+  grunt.registerTask('jadeTask', [ 'jade' ] );
 
 	// Theme task
 	grunt.registerTask( 'themes', [ 'sass' ] );

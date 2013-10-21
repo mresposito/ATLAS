@@ -1,0 +1,213 @@
+!!! 5
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title ATLAS | Forum analysis
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
+    link(rel='stylesheet', href='css/reveal.min.css')
+    link#theme(rel='stylesheet', href='css/theme/beige.css')
+    // For syntax highlighting
+    link(rel='stylesheet', href='lib/css/zenburn.css')
+    // If the query includes 'print-pdf', use the PDF print sheet
+    script
+      document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    //if lt IE 9
+      script(src='lib/js/html5shiv.js')
+  body
+    .reveal
+      // Any section element inside of this container is displayed as a slide
+      .slides
+        section
+          h1 Learn.illinois.edu
+          h3 How Moodle forums are being used
+          p
+            small
+              | Presentation by
+              a(href='http://www.micheleresposito.com') Michele Esposito
+        section
+          section
+            h2 Problem
+            p
+              | We do not know how students interact with our website
+          section
+            h2 How to solve it
+            p
+              | Data mining!
+        section
+          h2 The idea
+          p
+            | Understand how forums are used across different classes
+            | by looking at data
+        section
+          section(data-background='#007777')
+            h1 The process
+            p
+              | How I came up with the conclusions
+          section
+            h2 Get the list of classes
+            p
+              | Obtain the whole Fall 2012
+              | class catalogue
+              br
+              | from
+              a(href='http://courses.illinois.edu/cis/2012/fall/schedule/') courses.illinois.edu
+              p
+          section
+            h2 Obtain the database from Moodle
+            p
+              | And start digging inside the data
+              p
+          section
+            h2 Cross the data!
+            p
+              | Merge the two sources in order to get more results
+              p
+        section(data-background='#007777')
+          h2 Data about UIUC courses 
+          p
+            | Some results after analyzing the list of all courses:
+        section(data-transition='linear', data-background-transition='slide')
+          section
+            h2 All courses
+            ul
+              li
+                strong.allClassesSections
+                | Sections
+              li
+                strong.allClassesClasses
+                | courses
+              li
+                strong.allClassesDep
+                | Departments
+          section
+            h2 Courses sections per department
+            p
+              | Average sections per department:
+              strong.allClassesSectionsPerDepartments
+            canvas#allClassesSectionsPerDepartments(width='800', height='400')
+          section
+            h2 Courses per department
+            p
+              | Average courses per department:
+              strong.allClassesClassesPerDepartments
+            canvas#allClassesClassesPerDepartment(width='800', height='400')
+        section(data-transition='linear', data-background-transition='slide')
+          section
+            h2 Gen Eds
+            ul
+              li
+                strong.genEdsSections
+                | Sections
+              li
+                strong.genEdsClasses
+                | Classes
+              li
+                strong.genEdsDep
+                | Departments
+          section
+            h2 Gen eds sections per department
+            p
+              | Average gen ed per department:
+              strong.genEdsSectionsPerDepartments
+            canvas#genEdsSectionsPerDepartments(width='800', height='400')
+          section
+            h2 Gen eds classes per department
+            p
+              | Average gen ed classes per department:
+              strong.gensEdClassesPerDepartments
+            canvas#genEdsClassesPerDepartment(width='800', height='400')
+        section
+          section(data-background='#007777')
+            h2 Classes on moodle
+            ul
+              li
+                strong.moodleSections
+                | Sections
+              li
+                strong.moodleClasses
+                | Classes
+              li
+                strong.moodleDep
+                | Departments
+          section
+            h2 Moodle sections per department
+            p
+              | Average sections per department:
+              strong.moodleSectionsPerDepartments
+            canvas#moodleSectionsPerDepartments(width='800', height='400')
+          section
+            h2 Moodle classes per department
+            p
+              | Average classes per department:
+              strong.moodleClassesPerDepartment
+            canvas#moodleClassesPerDepartment(width='800', height='400')
+        section
+          section
+            h2 Gen Eds on moodle
+            ul
+              li
+                strong.moodleGenEdSections
+                | Sections
+              li
+                strong.moodleGenEdClasses
+                | Classes
+              li
+                strong.moodleGenEdDep
+                | Departments
+          section
+            h2 Moodle gen ed sections per department
+            p
+              | Average sections per department:
+              strong.moodleGenEdSectionsPerDepartments
+            canvas#moodleGenEdSectionsPerDepartments(width='800', height='400')
+          section
+            h2 Moodle gen ed classes per department
+            p
+              | Average classes per department:
+              strong.moodleGenEdClassesPerDepartment
+            canvas#moodleGenEdClassesPerDepartment(width='800', height='400')
+        section
+          section
+            h2 Forums
+            ul
+              li
+                strong.forumCount
+                | forums.
+              li
+                strong.forumDiscussionCount 83363
+                | discussions.
+              li
+                strong.forumPostCount 184742
+                | posts.
+          section
+            h2 Forum types
+            canvas#forumTypes(width='800', height='400')
+
+    script(src='lib/js/head.min.js')
+    script(src='js/reveal.min.js')
+    script
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+      // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+    script(src='lib/js/jquery-2.0.3.min.js')
+    script(src='lib/js/underscore-min.js')
+    script(src='lib/js/Chart.min.js')
+    script(src='lib/js/d3.min.js')
+    script(src='js/graph.js')
+
