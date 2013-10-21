@@ -10,11 +10,12 @@ import com.typesafe.scalalogging.slf4j.Logging
 class ClassAnalysisSpec extends Specification {
 
   val aasZulu = "data/AASZULUClasses.json"
+  val classes = ClassLoader.loadJson(aasZulu)
 
   "count methods" should {
 
-    val cls = new AllClasses(aasZulu)
-    val lcs = new Lectures(aasZulu)
+    val cls = ClassLoader.loadAll(classes)
+    val lcs = ClassLoader.loadLectures(classes)
 
     "count sessions per departent AAS 100 is 7" in {
       cls.countSectionsPerClass("AAS\t100").length must equalTo(7)
@@ -39,12 +40,12 @@ class ClassAnalysisSpec extends Specification {
 
   "load online classes" should {
     "loading 10 classes" in {
-      new Online(aasZulu).classes.length must equalTo(0)
+      ClassLoader.loadOnline(classes).classes.length must equalTo(0)
     }
 
     "loading full list" in {
       // TODO: fixme!
-      new Online("data/listOfClasses.json").classes.length must equalTo(21)
+      ClassLoader.loadOnline(ClassLoader.loadJson("data/listOfClasses.json")).classes.length must equalTo(21)
     }
   }
 }

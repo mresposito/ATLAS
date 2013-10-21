@@ -7,9 +7,33 @@ import com.typesafe.scalalogging.slf4j.Logging
 import edu.illinois.learn.models.Class
 import edu.illinois.learn.utils.{JsonClassReader, TSVUtil}
 
-abstract class ClassAnalysis {
-  val name: String
-  val classes: List[Class]
+object ClassLoader extends TSVUtil with JsonClassReader {
+
+  def loadJson(input: String) = loadClasses(input)
+  
+  def lectures(xs: List[Class]) = xs.filter{ cls =>
+    cls.classType contains "Lecture" 
+  }
+
+  def genEds(xs: List[Class]) = xs.filter{ cls =>
+    cls.genEd.isDefined
+  }
+
+  def online(xs: List[Class]) = {
+    val onlineData = "data/lasOnlineClasses.tsv"
+    val onlineList = readfromIO(onlineData)
+    val onlineCrn = onlineList.map(el => el(3).trim.toInt)
+    xs.filter{ cls =>
+      onlineCrn contains cls.crn
+    }
+  }
+
+  def loadAll(xs: List[Class]) = new ClassAnalysis("allClasses", xs)
+  def loadOnline(xs: List[Class]) = new ClassAnalysis("online", online(xs))
+  def loadLectures(xs: List[Class]) = new ClassAnalysis("lectures", lectures(xs))
+}
+
+class ClassAnalysis(val name: String, val classes: List[Class]) {
 
   def countSectionsPerDepartmens = classes.groupBy(_.dep)
 
@@ -21,42 +45,4 @@ abstract class ClassAnalysis {
     map{ case(k,v) => (k, v.groupBy(_.classSpec).size) }
 
   def countLocationPerSession = classes.groupBy(_.location)
-}
-
-class AllClasses(input: String) extends ClassAnalysis with JsonClassReader {
-  val name ="allClasses"
-  val classes = loadClasses(input)
-}
-
-class Lectures(input: String) extends ClassAnalysis with JsonClassReader {
-  val name = "lectures"
-  val classes = loadClasses(input).filter{ cls =>
-    cls.classType contains "Lecture" 
-  }
-}
-
-class GenEds(input: String) extends ClassAnalysis with JsonClassReader {
-  val name = "genEds"
-  val classes = loadClasses(input).filter{ cls =>
-    cls.genEd.isDefined
-  }
-}
-
-class Online(input: String) extends ClassAnalysis with TSVUtil with JsonClassReader {
-  val name = "online"
-  val onlineData = "data/lasOnlineClasses.tsv"
-
-  val onlineList = readfromIO(onlineData)
-  val onlineCrn = onlineList.map(el => el(3).trim.toInt)
-
-  val classes = loadClasses(input).filter{ cls =>
-    onlineCrn contains cls.crn
-  }
-}
-
-class Moodle(val classes: List[Class]) extends ClassAnalysis {
-  val name = "moodle"
-}
-class MoodleGenEd(val classes: List[Class]) extends ClassAnalysis {
-  val name = "moodleGenEd"
 }

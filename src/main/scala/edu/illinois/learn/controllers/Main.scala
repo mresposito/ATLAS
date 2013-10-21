@@ -3,33 +3,37 @@ package edu.illinois.learn.controllers
 import edu.illinois.learn.models.DataAccessLayer
 import edu.illinois.learn.models.Class
 import edu.illinois.learn.utils.TSVUtil
+import edu.illinois.learn.utils.JsonClassReader
 
-class RunWrapper[A <: ClassAnalysis](val cls: List[A]) extends TSVUtil {
+class RunWrapper(val cls: List[ClassAnalysis]) extends TSVUtil {
 
-  def run(fun: A => Map[String, List[Class]], jobName: String): Unit = cls.map { a: A =>
+  def run(fun: ClassAnalysis => Map[String, List[Class]], jobName: String): Unit = cls.map { a: ClassAnalysis =>
     writeResults(a.name + jobName, fun(a))
   }
-  def runCounted(fun: A => Map[String, Int], jobName: String): Unit = cls.map { a: A =>
+  def runCounted(fun: ClassAnalysis => Map[String, Int], jobName: String): Unit = cls.map { a: ClassAnalysis =>
     writeResultsCounted(a.name + jobName, fun(a))
   }
 }
 
-object ClassRunner extends TSVUtil  {
+object ClassRunner extends TSVUtil with JsonClassReader {
   def main(args: Array[String]) = {
     val classData = "data/listOfClasses.json"
     val dal = new DataAccessLayer
+    val classesFromJson = loadClasses(classData)
 
-    val all = new AllClasses(classData)
-    val genEds = new GenEds(classData)
-    val moodle = new Moodle(all.classes.filter{ el =>
+    val all = ClassLoader.loadAll(classesFromJson)
+    val genEds = new ClassAnalysis("genEds", ClassLoader.genEds(classesFromJson))
+    val moodle = new ClassAnalysis("moodle", all.classes.filter{ el =>
       dal.getCourseId(el.crn).isDefined 
     })
-    val moodleGenEd = new MoodleGenEd(
-      moodle.classes.filter(_.genEd.isDefined)
+    val lecture = ClassLoader.loadLectures(classesFromJson)
+    val online = ClassLoader.loadOnline(classesFromJson)
+    val moodleGenEd = new ClassAnalysis("moodleGenEd",
+      ClassLoader.genEds(moodle.classes)
     )
   
     val classes = List(all, moodle, genEds, moodleGenEd,
-      new Lectures(classData), new Online(classData))
+      lecture, online)
     val wrapper = new RunWrapper(classes)
 
     wrapper.run(_.countLocationPerSession, "LocationPerSection")
