@@ -28,7 +28,13 @@ trait TSVUtil {
   def writeResultsCounted[B](path: String, results: Map[String, B], output: String = "results/") = {
     val p = new PrintWriter(output + path + ".tsv", "UTF-8")
     p.print {
-      results.toList.sortBy(el => el._2.toString.toInt). // little hack
+      results.toList.sortBy(el => {
+        val e = el._2.toString
+        if(e contains ".")
+          e.toDouble
+        else 
+          e.toInt
+      }). // little hack
         map(el => el._1 + "\t" + el._2.toString).mkString("\n")
     }
     p.close()

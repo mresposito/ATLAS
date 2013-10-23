@@ -19,6 +19,11 @@ class ClassForumAnalysis(val classAnalysis: ClassAnalysis) {
       dal.findPostsPerClass(dal.getCourseId(cls.crn).get))
   }.toMap
 
+  def deviationPerClass = validCourses.map { cls =>
+    (cls.classSpec,
+      dal.findDeviationPerClass(dal.getCourseId(cls.crn).get))
+  }.toMap
+
   def forumCountPerSection = dal.joinCourses(classes).groupBy {
     case (k,v) => k.dep
   }

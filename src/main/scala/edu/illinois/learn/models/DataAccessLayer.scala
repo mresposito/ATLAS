@@ -49,4 +49,29 @@ class DataAccessLayer {
       p <- ForumPosts if p.discussionId is d.id 
     } yield p).list.length
   }
+
+  def stddev(xs: List[Int]): Double = stddev(xs, mean(xs))
+  def stddev(xs: List[Int], avg: Double): Double = xs match {
+    case Nil => 0.0
+    case ys => math.sqrt((0.0 /: ys) {
+      (a,e) => a + math.pow(e - avg, 2.0)
+    } / xs.size)
+  }
+
+  def mean(xs: List[Int]): Double = xs match {
+    case Nil => 0.0
+    case ys => ys.reduceLeft(_ + _) / ys.size.toDouble
+  }
+
+  def findDeviationPerClass(courseId: Long): Double = connection withSession {
+    val q = (for { 
+      f <- Forums if f.courseId is courseId
+      d <- ForumDiscussions if f.id is d.forumId
+      p <- ForumPosts if p.discussionId is d.id 
+    } yield p)
+    val postsPerStudent = q.list.groupBy(_.userId).map {
+      case (k,v) => v.length
+    }
+    stddev(postsPerStudent.toList)
+  }
 }

@@ -81,12 +81,16 @@ html(lang='en')
                 li
                   strong(class=tag + 'Dep') 
                   |   Departments
+            mixin subtitle
+              p(style="margin-top: 50px; font-size: 20px;") #{title}
+
             section
               h2 Sections per department
               p
                 | Average sections per department:
                 strong(class=tag + 'SectionsPerDepartments')
               canvas(id=tag + 'SectionsPerDepartments', width='800', height='400')
+              +subtitle
 
             section
               h2 Sections per department
@@ -94,6 +98,7 @@ html(lang='en')
                 | Standard deviaton of sections per department:
                 strong(class=tag + 'SectionsPerDepartmentsHistogram')
               canvas(id=tag + 'SectionsPerDepartmentsHistogram', width='800', height='400')
+              +subtitle
 
             section
               h2 Courses per department
@@ -101,6 +106,7 @@ html(lang='en')
                 | Average courses per department:
                 strong(class=tag + 'ClassesPerDepartment')
               canvas(id=tag + 'ClassesPerDepartment', width='800', height='400')
+              +subtitle
 
             section
               h2 Courses per department
@@ -108,6 +114,7 @@ html(lang='en')
                 | Standard deviaton of courses per department:
                 strong(class=tag + 'ClassesPerDepartmentHistogram')
               canvas(id=tag + 'ClassesPerDepartmentHistogram', width='800', height='400')
+              +subtitle
 
         section
           section
@@ -125,6 +132,12 @@ html(lang='en')
           section
             h2 Forum types
             canvas#forumTypes(width='800', height='400')
+
+        section
+          section
+            canvas#moodleForumPerDepartment(width='800', height='400')
+
+
 
     script(src='lib/js/head.min.js')
     script(src='js/reveal.min.js')

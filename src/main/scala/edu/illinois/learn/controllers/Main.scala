@@ -48,13 +48,14 @@ object ClassRunner extends TSVUtil with JsonClassReader {
       jobName: String): Unit = forums.map { a: ClassForumAnalysis =>
       writeResults(a.name + "Forum" + jobName, fun(a))
     }
-    def runCounted(fun: ClassForumAnalysis => Map[String, Int],
+    def runCounted[A](fun: ClassForumAnalysis => Map[String, A],
       jobName: String): Unit = forums.map { a: ClassForumAnalysis =>
       writeResultsCounted(a.name + "Forum" + jobName, fun(a))
     }
     run(_.forumCountPerSection, "PerSection")
     run(_.forumCountPerDepartment, "PerDepartment")
     runCounted(_.postsPerClass, "PostsPerClass")
+    runCounted(_.deviationPerClass, "PostStdPerClass")
   }
 
   def executeClassAnalysis(classes: List[ClassAnalysis]) = {

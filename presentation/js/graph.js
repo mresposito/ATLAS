@@ -93,3 +93,5 @@ _.map(["allClasses", "genEds", "moodle", "moodleGenEd"], renderClassGraphs);
 renderTopGraph("forumTypes", function(data) {
   $("strong.forumCount").text(sum(dataset(data)));
 });
+
+renderTopGraph("moodleForumPerDepartment", null, function(data) { return data; })
