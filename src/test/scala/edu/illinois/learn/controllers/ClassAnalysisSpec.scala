@@ -45,7 +45,7 @@ class ClassAnalysisSpec extends Specification {
 
     "loading full list" in {
       // TODO: fixme!
-      ClassLoader.loadOnline(ClassLoader.loadJson("data/listOfClasses.json")).classes.length must equalTo(21)
+      ClassLoader.loadOnline(ClassLoader.loadJson("data/listOfClasses.json")).classes.length must equalTo(130)
     }
   }
 }

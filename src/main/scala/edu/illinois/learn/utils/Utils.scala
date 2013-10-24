@@ -35,7 +35,7 @@ trait TSVUtil {
         else 
           e.toInt
       }). // little hack
-        map(el => el._1 + "\t" + el._2.toString).mkString("\n")
+        map(el => el._1.replace("\t", " ") + "\t" + el._2.toString).mkString("\n")
     }
     p.close()
   }

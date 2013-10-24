@@ -26,6 +26,8 @@ object ClassRunner extends TSVUtil with JsonClassReader {
     val moodle = new ClassAnalysis("moodle", all.classes.filter{ el =>
       dal.getCourseId(el.crn).isDefined 
     })
+    val moodleOnline = new ClassAnalysis("moodleOnline",
+      ClassLoader.online(moodle.classes))
     val lecture = ClassLoader.loadLectures(classesFromJson)
     val online = ClassLoader.loadOnline(classesFromJson)
     val moodleGenEd = new ClassAnalysis("moodleGenEd",
@@ -39,8 +41,8 @@ object ClassRunner extends TSVUtil with JsonClassReader {
 
     print("All Classes")
 
-    executeForumAnalysis(List(new ClassForumAnalysis(moodle),
-      new ClassForumAnalysis(moodleGenEd)))
+    val toFm = List(moodle, moodleGenEd, moodleOnline)
+    executeForumAnalysis(toFm.map(el => new ClassForumAnalysis(el)))
   }
 
   def executeForumAnalysis(forums: List[ClassForumAnalysis]) = {
@@ -52,7 +54,7 @@ object ClassRunner extends TSVUtil with JsonClassReader {
       jobName: String): Unit = forums.map { a: ClassForumAnalysis =>
       writeResultsCounted(a.name + "Forum" + jobName, fun(a))
     }
-    run(_.forumCountPerSection, "PerSection")
+    run(_.forumCountPerClass, "PerClass")
     run(_.forumCountPerDepartment, "PerDepartment")
     runCounted(_.postsPerClass, "PostsPerClass")
     runCounted(_.deviationPerClass, "PostStdPerClass")

@@ -1,7 +1,9 @@
 var baseData= "../../results/"
 var d3Load = function(path, callback) {
   d3.text(baseData + path, function(text) {
-    callback(d3.tsv.parseRows(text)); // automatically parse TSV
+    var data = d3.tsv.parseRows(text);
+    var parsed = _.zip(labels(data), dataset(data))
+    callback(_.sortBy(parsed, function(el) { return el[1];} )); // automatically parse TSV
   });
 };
 
@@ -31,13 +33,33 @@ var renderTopGraph = function(tag, callback) {
   });
 }
 
+var makeLabels = function(hist, points) {
+  var makeLabel = function (one, two) {
+    return one.toFixed(0) + "-" + two.toFixed(0);
+  }
+  var min = _.min(points)
+  var max = _.max(points)
+  var labels = [];
+  for(var i=0; i < hist.length; i++) {
+    var label = "";
+    var el = hist[i].x
+    if (i == hist.length -1) {
+      label = makeLabel(el, max)
+    } else {
+      label = makeLabel(el, hist[i+1].x -1)
+    }
+      labels.push(label)
+  }
+  return labels;
+}
+
 var renderHistogram = function(tag, callback) {
   var histogramTag = tag + "Histogram"
   renderProcessedGraph(histogramTag, callback, function(data) {
-    var buckets = toDisplay;
+    var buckets = toDisplay < data.length ? toDisplay : data.length;
     var points = dataset(data)
     var hist = d3.layout.histogram().bins(buckets)(points);
-    var labels = _.map(hist, function(el) { return el.x.toFixed(0); });
+    var labels = makeLabels(hist, points)
     var len = _.map(hist, function(el) { return el.length });
     var stDev = Stats(points).getStandardDeviation()
     $('.' + histogramTag).text(stDev.toFixed(2));
@@ -88,10 +110,26 @@ var renderClassGraphs = function(tag) {
   renderHistogram(classes);
 }
 
-_.map(["allClasses", "genEds", "moodle", "moodleGenEd"], renderClassGraphs);
+_.map(["allClasses", "genEds", "moodle", "moodleGenEd", "online"], renderClassGraphs);
 
+/**
+ * 
+ * Start plotting forum data
+ *
+ */
 renderTopGraph("forumTypes", function(data) {
   $("strong.forumCount").text(sum(dataset(data)));
 });
 
-renderTopGraph("moodleForumPerDepartment", null, function(data) { return data; })
+var renderForumGraphs = function(tag) {
+  var cls = '.' + tag
+  var classes = tag + 'ForumPerClass'
+  var departments = tag + 'ForumPerDepartment'
+ 
+  renderTopGraph(classes);
+  renderHistogram(classes);
+  renderTopGraph(departments);
+  renderHistogram(departments);
+}
+
+_.map(['moodle', 'moodleGenEd', 'moodleOnline'], renderForumGraphs);
