@@ -116,41 +116,63 @@ html(lang='en')
               canvas(id=tag + 'ClassesPerDepartmentHistogram', width='800', height='400')
               +subtitle
         //
-        // start flotting form data
+        // start plotting form data
         //
         section
           section
+            // FIXME: remove hard coding
             h2 Forums
             ul
               li
                 strong.forumCount
                 |   forums.
               li
-                strong.forumDiscussionCount
+                strong.forumDiscussionCount 83363
                 |   discussions.
               li
-                strong.forumPostCount 
+                strong.forumPostCount 184742
                 |    posts.
+
+              li
+                strong.forumDiscPerForum 7.28
+                |    average discussions per forum.
+              li
+                strong.forumPostPerDisc 2.21
+                |    average posts per discussion.
           section
             h2 Forum types
             canvas#forumTypes(width='800', height='400')
 
-        - var courses = {"moodle": "All classes", "moodleGenEd": "General Education Courses", "moodleOnline": "Fully Online Courses" }
+        - var courses = {"moodle": "All classes on Moodle", "moodleGenEd": "General Education Courses on Moodle", "moodleOnline": "Fully Online Courses" }
         - each title, tag in courses
           section(data-transition='linear', data-background-transition='slide')
             section
-              h2 Forums per classes
+              h1 #{title}
+            mixin subtitle
+              p(style="margin-top: 50px; font-size: 20px;") #{title}
+            section
+              h2 Forums per courses
               p
                 | Average forums per course:
                 strong(class=tag + 'ForumPerClass')
               canvas(id=tag + 'ForumPerClass', width='800', height='400')
+              +subtitle
 
             section
-              h2 Sections per department
+              h2 Forums per courses
               p
                 | Standard deviaton of forums per course:
                 strong(class=tag + 'ForumPerClassHistogram')
               canvas(id=tag + 'ForumPerClassHistogram', width='800', height='400')
+              +subtitle
+
+            section
+              h2 Forum posts per course:
+              p
+                | Average forums posts per course:
+                strong(class=tag + 'ForumPostsPerClass')
+              canvas(id=tag + 'ForumPostsPerClass', width='800', height='400')
+              +subtitle
 
             section
               h2 Forums per department
@@ -158,13 +180,23 @@ html(lang='en')
                 | Average forums per department:
                 strong(class=tag + 'ForumPerDepartment')
               canvas(id=tag + 'ForumPerDepartment', width='800', height='400')
+              +subtitle
 
             section
-              h2 Courses per department
+              h2 Forum posts per department:
+              p
+                | Average forums posts per department:
+                strong(class=tag + 'ForumPostsPerDepartment')
+              canvas(id=tag + 'ForumPostsPerDepartment', width='800', height='400')
+              +subtitle
+
+            section
+              h2 Forums per department
               p
                 | Standard deviaton of forums per department:
                 strong(class=tag + 'ForumPerDepartmentHistogram')
               canvas(id=tag + 'ForumPerDepartmentHistogram', width='800', height='400')
+              +subtitle
 
     script(src='lib/js/head.min.js')
     script(src='js/reveal.min.js')

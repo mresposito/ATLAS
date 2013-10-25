@@ -56,13 +56,15 @@ var makeLabels = function(hist, points) {
 var renderHistogram = function(tag, callback) {
   var histogramTag = tag + "Histogram"
   renderProcessedGraph(histogramTag, callback, function(data) {
-    var buckets = toDisplay < data.length ? toDisplay : data.length;
+    var buckets = 10;
     var points = dataset(data)
     var hist = d3.layout.histogram().bins(buckets)(points);
     var labels = makeLabels(hist, points)
     var len = _.map(hist, function(el) { return el.length });
     var stDev = Stats(points).getStandardDeviation()
-    $('.' + histogramTag).text(stDev.toFixed(2));
+    var avger = avg(data);
+    var txt = stDev.toFixed(2) + " (" + (stDev/avger).toFixed(2) + ")"
+    $('.' + histogramTag).text(txt);
 
     return _.zip(labels, len)
   });
@@ -125,10 +127,14 @@ var renderForumGraphs = function(tag) {
   var cls = '.' + tag
   var classes = tag + 'ForumPerClass'
   var departments = tag + 'ForumPerDepartment'
+  var posts = tag + 'ForumPostsPerClass'
+  var postsPerDep = tag + 'ForumPostsPerDepartment'
  
   renderTopGraph(classes);
-  renderHistogram(classes);
   renderTopGraph(departments);
+  renderTopGraph(posts);
+  renderTopGraph(postsPerDep);
+  renderHistogram(classes);
   renderHistogram(departments);
 }
 

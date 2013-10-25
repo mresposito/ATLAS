@@ -57,6 +57,7 @@ object ClassRunner extends TSVUtil with JsonClassReader {
     run(_.forumCountPerClass, "PerClass")
     run(_.forumCountPerDepartment, "PerDepartment")
     runCounted(_.postsPerClass, "PostsPerClass")
+    runCounted(_.postsPerDepartment, "PostsPerDepartment")
     runCounted(_.deviationPerClass, "PostStdPerClass")
   }
 
