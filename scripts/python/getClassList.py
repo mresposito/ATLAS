@@ -15,7 +15,7 @@ import json
 # with the following information
 ####
 YEAR = "2012"
-SEMESTER = "fall"
+SEMESTER = "summer"
 OUTPUT = "listOfClasses.json"
 
 serverURL = "https://courses.illinois.edu/cisapp/dispatcher/schedule/%s/%s" % (YEAR, SEMESTER)
