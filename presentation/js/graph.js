@@ -9,22 +9,6 @@ var d3Load = function(path, callback) {
 
 var toDisplay = 15
 
-var sum = function(xs) {
-  return _.reduce(xs, function(xs, ttl) { return xs + ttl }, 0);
-}
-
-var avg = function(data) {
-  return (sum(dataset(data))*1.0/data.length).toFixed(2);
-}
-
-var labels = function(xs) {
-  return _.map(xs, function(el) { return el[0]})
-}
-
-var dataset = function(xs, idx) {
-  return _.map(xs, function(el) { return parseInt(el[1])})
-}
-
 var renderTopGraph = function(tag, callback) {
   renderProcessedGraph(tag, callback, function(data) {
     $("strong."+tag).text(avg(data))
@@ -112,8 +96,6 @@ var renderClassGraphs = function(tag) {
   renderHistogram(classes);
 }
 
-_.map(["allClasses", "genEds", "moodle", "moodleGenEd", "online"], renderClassGraphs);
-
 /**
  * 
  * Start plotting forum data
@@ -138,4 +120,5 @@ var renderForumGraphs = function(tag) {
   renderHistogram(departments);
 }
 
+_.map(["allClasses", "genEds", "moodle", "moodleGenEd", "online"], renderClassGraphs);
 _.map(['moodle', 'moodleGenEd', 'moodleOnline'], renderForumGraphs);

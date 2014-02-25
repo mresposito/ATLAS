@@ -66,58 +66,8 @@ html(lang='en')
           h2 Data about UIUC courses 
           p
             | Some results after analyzing the list of all courses:
-        - var courses = { "allClasses": "All courses", "genEds": "General Education Courses", "moodle": "Moodle classes", "moodleGenEd": "General Education Courses on Moodle", "online": "Online Courses" }
-        - each title, tag in courses
-          section(data-transition='linear', data-background-transition='slide')
-            section
-              h2 #{title}
-              ul
-                li
-                  strong(class=tag + 'Sections')
-                  |    Sections
-                li
-                  strong(class=tag + 'Classes')  
-                  |   Courses
-                li
-                  strong(class=tag + 'Dep') 
-                  |   Departments
-            mixin subtitle
-              p(style="margin-top: 50px; font-size: 20px;") #{title}
-
-            section
-              h2 Sections per department
-              p
-                | Average sections per department:
-                strong(class=tag + 'SectionsPerDepartments')
-              canvas(id=tag + 'SectionsPerDepartments', width='800', height='400')
-              +subtitle
-
-            section
-              h2 Sections per department
-              p
-                | Standard deviaton of sections per department:
-                strong(class=tag + 'SectionsPerDepartmentsHistogram')
-              canvas(id=tag + 'SectionsPerDepartmentsHistogram', width='800', height='400')
-              +subtitle
-
-            section
-              h2 Courses per department
-              p
-                | Average courses per department:
-                strong(class=tag + 'ClassesPerDepartment')
-              canvas(id=tag + 'ClassesPerDepartment', width='800', height='400')
-              +subtitle
-
-            section
-              h2 Courses per department
-              p
-                | Standard deviaton of courses per department:
-                strong(class=tag + 'ClassesPerDepartmentHistogram')
-              canvas(id=tag + 'ClassesPerDepartmentHistogram', width='800', height='400')
-              +subtitle
-        //
-        // start plotting form data
-        //
+        
+        // start plotting forum data
         section
           section
             // FIXME: remove hard coding
@@ -202,7 +152,7 @@ html(lang='en')
           h2 Thank you for your attention
 
     script(src='lib/js/head.min.js')
-    script(src='js/reveal.min.js')
+    script(src='lib/js/reveal.min.js')
     script
       // Full list of configuration options available here:
       // https://github.com/hakimel/reveal.js#configuration
@@ -224,9 +174,5 @@ html(lang='en')
         ]
       });
     script(src='lib/js/jquery-2.0.3.min.js')
-    script(src='lib/js/underscore-min.js')
-    script(src='lib/js/Chart.min.js')
-    script(src='lib/js/d3.min.js')
-    script(src='js/Stats.js')
-    script(src='js/graph.js')
+    script(data-main='js/app.js', src='//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js')
 
