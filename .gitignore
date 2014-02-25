@@ -34,3 +34,4 @@ results
 # ignore HTML (we use jade)
 presentation/node_modules
 *.html
+.cache

@@ -3,23 +3,35 @@ package edu.illinois.learn.controllers
 import edu.illinois.learn.models.DataAccessLayer
 import edu.illinois.learn.models.Class
 import edu.illinois.learn.utils.TSVUtil
-import edu.illinois.learn.utils.JsonClassReader
+import com.typesafe.config.ConfigFactory
+import scala.collection.JavaConversions._
 
-class RunWrapper(val cls: List[ClassAnalysis]) extends TSVUtil {
+import com.typesafe.scalalogging.slf4j.Logging
 
-  def run(fun: ClassAnalysis => Map[String, List[Class]], jobName: String): Unit = cls.map { a: ClassAnalysis =>
-    writeResults(a.name + jobName, fun(a))
-  }
-  def runCounted(fun: ClassAnalysis => Map[String, Int], jobName: String): Unit = cls.map { a: ClassAnalysis =>
-    writeResultsCounted(a.name + jobName, fun(a))
+object ClassRunner extends Logging {
+
+   val conf = ConfigFactory.load
+  
+  def main(args: Array[String]): Unit = {
+    val semesters = conf.getList("classes.long")
+    val sem: Seq[String] = semesters.unwrapped().map(_.toString)
+    sem.map(s => new SemesterRunner(s))
   }
 }
 
-object ClassRunner extends TSVUtil with JsonClassReader {
-  def main(args: Array[String]) = {
-    val classData = "data/listOfClasses.json"
-    val dal = new DataAccessLayer
-    val classesFromJson = loadClasses(classData)
+class SemesterRunner(semester: String) extends TSVUtil with  Logging {
+
+   val conf = ConfigFactory.load
+   val listOfClasses = conf.getString("input.listOfClasses")
+   val dal = new DataAccessLayer
+   runAnalysis
+    
+  def runAnalysis: Unit = {
+    // loads the class metadata from json files
+    val classData = listOfClasses + s"/${semester}/listOfClasses.json"
+    // loads the semester classes
+    val classesFromJson = ClassLoader.loadClasses(classData)
+
     val all = ClassLoader.loadAll(classesFromJson)
 
     val genEds = new ClassAnalysis("genEds", ClassLoader.genEds(classesFromJson))
@@ -37,7 +49,7 @@ object ClassRunner extends TSVUtil with JsonClassReader {
     executeClassAnalysis(List(all, moodle, genEds, moodleGenEd,
       lecture, online))
     // start forum analysis    
-    writeResults("forumTypes", dal.countForumType)
+    writeResults("allForumTypes", dal.countForumType)
 
     print("All Classes")
 
@@ -48,11 +60,11 @@ object ClassRunner extends TSVUtil with JsonClassReader {
   def executeForumAnalysis(forums: List[ClassForumAnalysis]) = {
     def run[A](fun: ClassForumAnalysis => Map[String, List[A]],
       jobName: String): Unit = forums.map { a: ClassForumAnalysis =>
-      writeResults(a.name + "Forum" + jobName, fun(a))
+      writeResults(semester + "/" + a.name + "Forum" + jobName, fun(a))
     }
     def runCounted[A](fun: ClassForumAnalysis => Map[String, A],
       jobName: String): Unit = forums.map { a: ClassForumAnalysis =>
-      writeResultsCounted(a.name + "Forum" + jobName, fun(a))
+      writeResultsCounted(semester + "/" + a.name + "Forum" + jobName, fun(a))
     }
     run(_.forumCountPerClass, "PerClass")
     run(_.forumCountPerDepartment, "PerDepartment")
@@ -61,12 +73,18 @@ object ClassRunner extends TSVUtil with JsonClassReader {
     runCounted(_.deviationPerClass, "PostStdPerClass")
   }
 
-  def executeClassAnalysis(classes: List[ClassAnalysis]) = {
-    val wrapper = new RunWrapper(classes)
-    wrapper.run(_.countLocationPerSession, "LocationPerSection")
-    wrapper.run(_.countInstructorPerSession, "InstuctorPerSection")
-    wrapper.run(_.countSectionsPerDepartmens, "SectionsPerDepartments")
-    wrapper.run(_.countSectionsPerClass, "SectionsPerClass")
-    wrapper.runCounted(_.countClassesPerDepartment, "ClassesPerDepartment")
+  def executeClassAnalysis(cls: List[ClassAnalysis]) = {
+    run(_.countLocationPerSession, "LocationPerSection")
+    run(_.countInstructorPerSession, "InstuctorPerSection")
+    run(_.countSectionsPerDepartmens, "SectionsPerDepartments")
+    run(_.countSectionsPerClass, "SectionsPerClass")
+    runCounted(_.countClassesPerDepartment, "ClassesPerDepartment")
+
+	  def run(fun: ClassAnalysis => Map[String, List[Class]], jobName: String): Unit = cls.map { a: ClassAnalysis =>
+	    writeResults(semester + "/" + a.name + jobName, fun(a))
+	  }
+	  def runCounted(fun: ClassAnalysis => Map[String, Int], jobName: String): Unit = cls.map { a: ClassAnalysis =>
+	    writeResultsCounted(semester + "/" + a.name + jobName, fun(a))
+	  }
   }
 }

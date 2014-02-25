@@ -5,9 +5,18 @@ package edu.illinois.learn.controllers
 
 import com.typesafe.scalalogging.slf4j.Logging
 import edu.illinois.learn.models.Class
-import edu.illinois.learn.utils.{JsonClassReader, TSVUtil}
+import edu.illinois.learn.utils.TSVUtil
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
+import scala.io.Source
 
-object ClassLoader extends TSVUtil with JsonClassReader {
+object ClassLoader extends TSVUtil {
+
+  implicit val formatters = DefaultFormats
+  
+  def loadClasses(input: String): List[Class] = for {
+    line <- Source.fromFile(input).getLines.toList
+  } yield parse(line).extract[Class]
 
   def loadJson(input: String) = loadClasses(input)
   

@@ -5,8 +5,6 @@ package edu.illinois.learn.utils
 
 import edu.illinois.learn.models.Class
 import java.io.PrintWriter
-import org.json4s._
-import org.json4s.jackson.JsonMethods._
 import scala.io.Source
 
 trait TSVUtil {
@@ -39,12 +37,4 @@ trait TSVUtil {
     }
     p.close()
   }
-}
-
-trait JsonClassReader {
-  implicit val formatters = DefaultFormats
-  
-  def loadClasses(input: String): List[Class] = for {
-    line <- Source.fromFile(input).getLines.toList
-  } yield parse(line).extract[Class]
 }
