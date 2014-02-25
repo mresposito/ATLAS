@@ -35,3 +35,5 @@ results
 presentation/node_modules
 *.html
 .cache
+
+scripts/python/*.json
