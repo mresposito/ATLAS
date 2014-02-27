@@ -50,6 +50,14 @@ require ([
     el: $el,
     model: classModel
   })
-  // render the forum data
+  // render forums
+  new Classes({
+    el: $el,
+    model: new Graph({
+      data: Settings.forums,
+      semesters: Settings.semesters
+    })
+  })
 
-})
+  $el.append("<section><h2>Thank you for your attention</h2></section>")
+});

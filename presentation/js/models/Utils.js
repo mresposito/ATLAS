@@ -34,7 +34,6 @@ define ([
           data: this.dataset(data)
         }]
       };
-      console.log(tag);
       var ctx = document.getElementById(tag.replace(".","")).getContext("2d");
       new Chart(ctx).Bar(data);
     },

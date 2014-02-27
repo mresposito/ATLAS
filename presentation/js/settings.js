@@ -12,6 +12,7 @@ define ([
     classes: {
       graphs: ["top", "histogram"],
       stats: ["avg", "stdev"],
+      template: "classes",
       aggregations: [
         {tag: "allClasses", text: "All courses"},
         {tag: "genEds", text: "General Education Courses"},
@@ -26,6 +27,20 @@ define ([
       ]
     },
     forums: {
+      graphs: ["top", "histogram"],
+      stats: ["avg", "stdev"],
+      template: "forums",
+      aggregations: [
+        {tag: "moodle", text: "All classes on Moodle"},
+        {tag: "moodleGenEd", text: "General Education Courses on Moodle"},
+        {tag: "moodleOnline", text: "Fully Online Courses"}
+      ],
+      columns: [
+        {tag: "ForumPerClass", graphs: ["histogram"]},
+        {tag: "ForumPostsPerClass"},
+        {tag: "ForumPerDepartment", graphs: ["histogram"]},
+        {tag: "ForumPostsPerDepartment"},
+      ],
     }
   }
 });

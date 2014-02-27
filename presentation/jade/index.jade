@@ -82,7 +82,6 @@ html(lang='en')
               li
                 strong.forumPostCount 184742
                 |    posts.
-
               li
                 strong.forumDiscPerForum 7.28
                 |    average discussions per forum.
@@ -92,64 +91,6 @@ html(lang='en')
           section
             h2 Forum types
             canvas#forumTypes(width='800', height='400')
-
-        - var courses = {"moodle": "All classes on Moodle", "moodleGenEd": "General Education Courses on Moodle", "moodleOnline": "Fully Online Courses" }
-        - each title, tag in courses
-          section(data-transition='linear', data-background-transition='slide')
-            section
-              h1 #{title}
-            mixin subtitle
-              p(style="margin-top: 50px; font-size: 20px;") #{title}
-            section
-              h2 Forums per courses
-              p
-                | Average forums per course:
-                strong(class=tag + 'ForumPerClass')
-              canvas(id=tag + 'ForumPerClass', width='800', height='400')
-              +subtitle
-
-            section
-              h2 Forums per courses
-              p
-                | Standard deviaton of forums per course:
-                strong(class=tag + 'ForumPerClassHistogram')
-              canvas(id=tag + 'ForumPerClassHistogram', width='800', height='400')
-              +subtitle
-
-            section
-              h2 Forum posts per course:
-              p
-                | Average forums posts per course:
-                strong(class=tag + 'ForumPostsPerClass')
-              canvas(id=tag + 'ForumPostsPerClass', width='800', height='400')
-              +subtitle
-
-            section
-              h2 Forums per department
-              p
-                | Average forums per department:
-                strong(class=tag + 'ForumPerDepartment')
-              canvas(id=tag + 'ForumPerDepartment', width='800', height='400')
-              +subtitle
-
-            section
-              h2 Forum posts per department:
-              p
-                | Average forums posts per department:
-                strong(class=tag + 'ForumPostsPerDepartment')
-              canvas(id=tag + 'ForumPostsPerDepartment', width='800', height='400')
-              +subtitle
-
-            section
-              h2 Forums per department
-              p
-                | Standard deviaton of forums per department:
-                strong(class=tag + 'ForumPerDepartmentHistogram')
-              canvas(id=tag + 'ForumPerDepartmentHistogram', width='800', height='400')
-              +subtitle
-        // final slide
-        section
-          h2 Thank you for your attention
 
     script(src='lib/js/head.min.js')
     script(src='lib/js/reveal.min.js')
