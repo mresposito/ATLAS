@@ -10,10 +10,6 @@ define ([
 
   return Backbone.Model.extend({
 
-    defaults: {
-
-    },
-
     renderColumn: function(column, aggregate) {
       var self = this;
       var fullTag = aggregate.tag + column.tag

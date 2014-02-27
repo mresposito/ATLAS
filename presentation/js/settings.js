@@ -6,6 +6,11 @@ define ([
    * Possible stats: total, count, avg, stdev
    */
   return {
+    // graph rendering
+    graphRendering: {
+      toDisplay: 15,
+      buckets: 10
+    },
     // semesters we are running on
     semesters: ["2012fall", "2012summer"],
 
