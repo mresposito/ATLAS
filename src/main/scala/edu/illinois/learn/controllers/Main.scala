@@ -68,6 +68,9 @@ class SemesterRunner(semester: String) extends TSVUtil with  Logging {
     }
     run(_.forumCountPerClass, "PerClass")
     run(_.forumCountPerDepartment, "PerDepartment")
+    runCounted(_.enrollmentPerClass, "EnrollmentPerClass")
+    runCounted(_.departmentPostCount, "EnrollmentPerDepartment")
+
     runCounted(_.postsPerClass, "PostsPerClass")
     runCounted(_.postsPerDepartment, "PostsPerDepartment")
     runCounted(_.deviationPerClass, "PostStdPerClass")

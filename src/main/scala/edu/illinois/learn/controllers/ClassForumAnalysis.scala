@@ -46,6 +46,10 @@ class ClassForumAnalysis(val classAnalysis: ClassAnalysis) {
   }.map {
     case (dep, v) => (dep, v/departmentPostCount(dep))
   }
+  
+  def enrollmentPerClass = courseWithEnrollment.map {
+    case (cls, Some(enr)) => (cls.classSpec, enr)
+  }.toMap
 
   def deviationPerClass = validCourses.map { cls =>
     (cls.classSpec,
