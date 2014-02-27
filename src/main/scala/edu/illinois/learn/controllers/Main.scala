@@ -72,8 +72,8 @@ class SemesterRunner(semester: String) extends TSVUtil with  Logging {
     runCounted(_.postsPerDepartment, "PostsPerDepartment")
     runCounted(_.deviationPerClass, "PostStdPerClass")
     // post counts
-    runCounted(_.postsPerStudentPerClass, "PerStudentPerClass")
-    runCounted(_.postsPerStudentPerDepartment, "PerStudentPerDepartment")
+    runCounted(_.postsPerStudentPerClass, "PostsPerStudentPerClass")
+    runCounted(_.postsPerStudentPerDepartment, "PostsPerStudentPerDepartment")
   }
 
   def executeClassAnalysis(cls: List[ClassAnalysis]) = {
