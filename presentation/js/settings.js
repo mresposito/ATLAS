@@ -22,7 +22,6 @@ define ([
       ],
       columns: [ // puts more graphs here
         {tag: "ClassesPerDepartment", stats: ["total"]},
-        // {tag: "SectionsPerClass"},
         {tag: "SectionsPerDepartment", stats: ["total", "count"]}
       ]
     },
@@ -38,8 +37,10 @@ define ([
       columns: [
         {tag: "ForumPerClass", graphs: ["histogram"]},
         {tag: "ForumPostsPerClass"},
+        {tag: "ForumPostsPerStudentPerClass"},
         {tag: "ForumPerDepartment", graphs: ["histogram"]},
         {tag: "ForumPostsPerDepartment"},
+        {tag: "ForumPostsPerStudentPerDepartment"},
       ],
     }
   }
