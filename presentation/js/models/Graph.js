@@ -10,23 +10,24 @@ define ([
 
   return Backbone.Model.extend({
 
-    renderColumn: function(column, aggregate) {
+    renderColumn: function(column, tag) {
       var self = this;
-      var fullTag = aggregate.tag + column.tag
       _.map(this.get("semesters"), function(semester) {
-        var path = baseData + semester + "/" + fullTag;
+        var tagWithNoSemester = tag.replace(semester, "");
+        var path = baseData + semester +
+          "/" + tagWithNoSemester;
         // load the TSV
         d3.text(path + ".tsv", function(text) {
           var data = d3.tsv.parseRows(text);
           var parsed = _.zip(Utils.labels(data), Utils.dataset(data))
           var sortedData = _.sortBy(parsed, function(el) { return el[1];})
-          self.renderData(sortedData, column, aggregate, semester)
+          self.renderData(sortedData, column, tag, semester)
         });
       });
     },
 
-    renderData: function(data, column, aggregate, semester) {
-      var cls = "." + aggregate.tag + column.tag 
+    renderData: function(data, column, tag, semester) {
+      var cls = "." + tag
       var loopOnGraphs = function(graphs) {
         _.map(graphs, function(graph) {
           Utils.switchGraph(graph, cls, data)

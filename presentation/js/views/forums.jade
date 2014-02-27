@@ -11,10 +11,11 @@ section(data-transition='linear', data-background-transition='slide')
       canvas(id=tag + column.tag + 'Top', width='800', height='400')
       +subtext
       
-    section
-      h2 #{camel(column.tag)}
-      p
-        | Standard deviaton of #{camel(column.tag)}
-        strong(class=tag + column.tag + 'Stdev')
-      canvas(id=tag + column.tag + 'Histogram', width='800', height='400')
-      +subtext
+    if hasHistogram(column)
+      section
+        h2 #{camel(column.tag)}
+        p
+          | Standard deviaton of #{camel(column.tag)}
+          strong(class=tag + column.tag + 'Stdev')
+        canvas(id=tag + column.tag + 'Histogram', width='800', height='400')
+        +subtext

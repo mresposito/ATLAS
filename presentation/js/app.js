@@ -40,24 +40,15 @@ require ([
 ], function($, _, Backbone, Settings, Classes, Graph) {
 
   var $el = $(".slides");
-
-  var classModel = new Graph({
-    data: Settings.classes,
-    semesters: Settings.semesters
-  });
-  // render the classes data
-  new Classes({
-    el: $el,
-    model: classModel
-  })
-  // render forums
-  new Classes({
-    el: $el,
-    model: new Graph({
-      data: Settings.forums,
-      semesters: Settings.semesters
+  _.map(Settings.series, function(serie) {
+    new Classes({
+      el: $el,
+      model: new Graph({
+        data: serie,
+        semesters: Settings.semesters
+      })
     })
-  })
+  });
 
   $el.append("<section><h2>Thank you for your attention</h2></section>")
 });

@@ -18,17 +18,32 @@ define ([
       }
     }, 
 
+    hasHistogram: function(column) {
+      if ("graphs" in column) {
+        return column.graphs.indexOf("histogram") > -1;
+      } else {
+        return false;
+      }
+    },
+
     renderClassGraph: function(aggregate) {
       var self = this;
-      var templatePath = "text!/js/views/" + this.model.get("data").template + ".jade"
+      var data = this.model.get("data")
+      var templatePath = "text!/js/views/" + data.template + ".jade"
       var template = Jade.compile(require(templatePath));
-      var columns = this.model.get("data").columns
+      var columns = data.columns
+      var templateVariables = {
+        columns: columns,
+        camel: Utils.splitCamelCase,
+        hasHistogram: self.hasHistogram
+      }
       // prepare the template
-      var fullVariables = _.extend(aggregate, {columns: columns, camel: Utils.splitCamelCase})
+      var fullVariables = _.extend(aggregate, templateVariables)
       $(this.el).append(template(fullVariables));
       // Render a simple class graph
       _.map(columns, function(col) {
-        self.model.renderColumn(col, aggregate)
+      var fullTag = aggregate.tag + col.tag
+        self.model.renderColumn(col, fullTag)
       })
     }
   });
