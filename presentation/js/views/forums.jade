@@ -1,21 +1,42 @@
 section(data-transition='linear', data-background-transition='slide')
+  section
+    h5 #{prettySemester}
+    h2 #{text}
+    ul
+      li
+        strong(class=semester + tag + 'ForumPerClassTotal')
+        |   Forums
+      li
+        strong(class=semester + tag + 'ForumPostsPerClassTotal')
+        |   Forum posts
+      li
+        strong(class=semester + tag + 'ForumEnrollmentPerClassTotal')
+        |   Total student enrollments
+
   mixin subtext
-    p(style="margin-top: 50px; font-size: 20px;") #{text}
+    h6(style="margin-top: 50px; font-size: 20px;") #{text}
+    h5 #{prettySemester}
 
   - each column in columns
     section
       h2 #{camel(column.tag)}
       p
         | Average of #{camel(column.tag)}
-        strong(class=tag + column.tag + 'Avg')
-      canvas(id=tag + column.tag + 'Top', width='800', height='400')
+        strong(class=semester + tag + column.tag + 'Avg')
+      canvas(id=semester + tag + column.tag + 'Top', width='800', height='400')
       +subtext
       
-    if hasHistogram(column)
+    if hasProperty(column, "full")
+      section
+        h2 #{camel(column.tag)}
+        canvas(id=semester + tag + column.tag + 'Full', width='800', height='400')
+        +subtext
+
+    if hasProperty(column, "histogram")
       section
         h2 #{camel(column.tag)}
         p
           | Standard deviaton of #{camel(column.tag)}
-          strong(class=tag + column.tag + 'Stdev')
-        canvas(id=tag + column.tag + 'Histogram', width='800', height='400')
+          strong(class=semester + tag + column.tag + 'Stdev')
+        canvas(id=semester + tag + column.tag + 'Histogram', width='800', height='400')
         +subtext

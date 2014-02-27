@@ -1,32 +1,34 @@
 section(data-transition='linear', data-background-transition='slide')
   section
+    h5 #{prettySemester}
     h2 #{text}
     ul
       li
-        strong(class=tag + 'SectionsPerDepartmentTotal')
+        strong(class=semester + tag + 'SectionsPerDepartmentTotal')
         |   Sections
       li
-        strong(class=tag + 'ClassesPerDepartmentTotal')  
+        strong(class=semester + tag + 'ClassesPerDepartmentTotal')  
         |   Courses
       li
-        strong(class=tag + 'SectionsPerDepartmentCount') 
+        strong(class=semester + tag + 'SectionsPerDepartmentCount') 
         |   Departments
   mixin subtext
-    p(style="margin-top: 50px; font-size: 20px;") #{text}
+    h6(style="margin-top: 50px; font-size: 20px;") #{text}
+    h5 #{prettySemester}
 
   - each column in columns
     section
       h2 #{camel(column.tag)}
       p
         | Average of #{camel(column.tag)}
-        strong(class=tag + column.tag + 'Avg')
-      canvas(id=tag + column.tag + 'Top', width='800', height='400')
+        strong(class=semester + tag + column.tag + 'Avg')
+      canvas(id=semester + tag + column.tag + 'Top', width='800', height='400')
       +subtext
       
     section
       h2 #{camel(column.tag)}
       p
         | Standard deviaton of #{camel(column.tag)}
-        strong(class=tag + column.tag + 'Stdev')
-      canvas(id=tag + column.tag + 'Histogram', width='800', height='400')
+        strong(class=semester + tag + column.tag + 'Stdev')
+      canvas(id=semester + tag + column.tag + 'Histogram', width='800', height='400')
       +subtext

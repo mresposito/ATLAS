@@ -84,6 +84,10 @@ define ([
         this.renderTopGraph(fullCls, data);
       } else if(graphType == "histogram") {
         this.renderHistogramGraph(fullCls, data);
+      } else if(graphType == "full") {
+        data.reverse()
+        this.renderGraph(fullCls, data);
+        data.reverse()
       }
     },
     switchStat: function(statType, cls, data) {
@@ -107,6 +111,11 @@ define ([
     },
     splitCamelCase: function(string) {
       return string.replace(/([A-Z])/g, ' $1');
+    },
+
+    prettySemester: function(string) {
+      var almostPretty = string.replace("2012", "") + " " + "2012";
+      return this.upperCase(almostPretty);
     }
   };
 });

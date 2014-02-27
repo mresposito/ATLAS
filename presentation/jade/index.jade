@@ -46,11 +46,11 @@ html(lang='en')
           section
             h2 Get the list of classes
             p
-              | Obtain the whole Fall 2012
+              | Obtain the whole Fall 2012, Summer 2012
               | class catalogue
               br
               | from
-              a(href='http://courses.illinois.edu/cis/2012/fall/schedule/') courses.illinois.edu
+              a(href='http://courses.illinois.edu/cis/2012/fall/schedule/')    courses.illinois.edu
               p
           section
             h2 Obtain the database from Moodle
@@ -58,39 +58,19 @@ html(lang='en')
               | And start digging inside the data
               p
           section
-            h2 Cross the data!
+            h2 Cross the data
             p
               | Merge the two sources in order to get more results
               p
-        section(data-background='#007777')
+          section
+            h2 Note
+            p
+              | No data is hardcoded in this presentation
+              | running on a new semester is really easy!
+        section
           h2 Data about UIUC courses 
           p
             | Some results after analyzing the list of all courses:
-        
-        // start plotting forum data
-        section
-          section
-            // FIXME: remove hard coding
-            h2 Forums
-            ul
-              li
-                strong.forumCount
-                |   forums.
-              li
-                strong.forumDiscussionCount 83363
-                |   discussions.
-              li
-                strong.forumPostCount 184742
-                |    posts.
-              li
-                strong.forumDiscPerForum 7.28
-                |    average discussions per forum.
-              li
-                strong.forumPostPerDisc 2.21
-                |    average posts per discussion.
-          section
-            h2 Forum types
-            canvas#forumTypes(width='800', height='400')
 
     script(src='lib/js/head.min.js')
     script(src='lib/js/reveal.min.js')

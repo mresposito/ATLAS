@@ -43,12 +43,14 @@ define ([
           {tag: "moodleOnline", text: "Fully Online Courses"}
         ],
         columns: [
-          {tag: "ForumPerClass", graphs: ["histogram"]},
-          {tag: "ForumPostsPerClass"},
+          {tag: "ForumPerClass", graphs: ["histogram"], stats: ["total"]},
+          {tag: "ForumPostsPerClass", stats: ["total"], graphs: ["top", "full"]},
           {tag: "ForumPostsPerStudentPerClass"},
+          {tag: "ForumEnrollmentPerClass", stats: ["total"]},
           {tag: "ForumPerDepartment", graphs: ["histogram"]},
           {tag: "ForumPostsPerDepartment"},
           {tag: "ForumPostsPerStudentPerDepartment"},
+          {tag: "ForumEnrollmentPerDepartment"},
         ],
       }
     ]

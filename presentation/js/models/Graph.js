@@ -10,18 +10,20 @@ define ([
 
   return Backbone.Model.extend({
 
-    renderColumn: function(column, tag) {
+    renderColumn: function(column, aggregate) {
       var self = this;
       _.map(this.get("semesters"), function(semester) {
-        var tagWithNoSemester = tag.replace(semester, "");
+        var halfTag = aggregate.tag + column.tag
+        var fullTag = semester + halfTag
         var path = baseData + semester +
-          "/" + tagWithNoSemester;
+            "/" + halfTag;
         // load the TSV
         d3.text(path + ".tsv", function(text) {
           var data = d3.tsv.parseRows(text);
           var parsed = _.zip(Utils.labels(data), Utils.dataset(data))
           var sortedData = _.sortBy(parsed, function(el) { return el[1];})
-          self.renderData(sortedData, column, tag, semester)
+          self.renderData(sortedData, column,
+            fullTag, semester)
         });
       });
     },
