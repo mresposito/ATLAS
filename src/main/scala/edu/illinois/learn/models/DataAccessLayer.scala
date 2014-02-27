@@ -2,6 +2,13 @@ package edu.illinois.learn.models
 
 import scala.slick.driver.MySQLDriver.simple._
 import Database.threadLocalSession
+import scala.slick.jdbc.{GetResult, StaticQuery => Q}
+
+case class Enrollment (
+	semester: String,
+	shortName: String,
+	crn: String,
+	enrollments: Int)
 
 class DataAccessLayer {
   val connection = Database.forURL("jdbc:mysql://localhost/moodle", driver="com.mysql.jdbc.Driver", user="root") 
@@ -40,6 +47,26 @@ class DataAccessLayer {
 
   def findForumDiscussion(id: Long) = connection withSession {
     Query(ForumDiscussions).filter(_.id === id).firstOption
+  }
+  
+  implicit val getEnrollmentResult = GetResult(r => Enrollment(r.<<, r.<<, r.<<, r.<<))
+  
+  def getCourseEnrollments = connection withSession {
+	    Q.queryNA[Enrollment]("""
+	  """)
+  }
+  
+  def getCRNEnrollment(crn: Int): Option[Int] = connection withSession {
+    val q = Q.queryNA[Int](s"""
+    SELECT count(DISTINCT ue.userid)
+  	FROM mdl_user_enrolments ue, mdl_enrol e, mdl_course c, `mdl_enrol_autoroster_section` eas
+  	WHERE	ue.enrolid = e.id
+  		AND c.id = e.courseid
+  		AND eas.`courseid` = e.courseid
+  		AND eas.`crn` = ${crn}
+  	GROUP BY c.id
+    """)
+    q.firstOption
   }
 
   def findPostsPerClass(courseId: Long): Int = connection withSession {

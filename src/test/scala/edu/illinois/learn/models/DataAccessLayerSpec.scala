@@ -56,4 +56,19 @@ class DataAccessLayerSpec extends Specification {
       dal.findPostsPerClass(1) must beEqualTo(0)
     }
   }
+  
+  "count enrollments" should {
+  	"CRN 51193 must have 17 enrollments" in {
+  	  dal.getCRNEnrollment(51193) must beSome(7)
+  	}
+  	"CRN 59947 must have 42 enrollments" in {
+  	  dal.getCRNEnrollment(59947) must beSome(42)
+  	}
+  	"CRN 36296 must have 141 enrollments" in {
+  	  dal.getCRNEnrollment(36296) must beSome(141)
+  	}
+  	"Fake CRN should be none" in {
+  	  dal.getCRNEnrollment(23092) must beNone
+  	}
+  }
 }
