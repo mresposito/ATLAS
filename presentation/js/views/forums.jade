@@ -29,6 +29,9 @@ section(data-transition='linear', data-background-transition='slide')
     if hasProperty(column, "full")
       section
         h2 #{camel(column.tag)}
+        p
+          | Standard deviaton of #{camel(column.tag)}
+          strong(class=semester + tag + column.tag + 'Stdev')
         canvas(id=semester + tag + column.tag + 'Full', width='800', height='400')
         +subtext
 
