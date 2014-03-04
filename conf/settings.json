@@ -1,0 +1,24 @@
+[
+  {
+    "name": "classes",
+    "semesters": ["2012summer", "2012fall"],
+    "aggregations": [
+      {
+        "tag": "allClasses",
+        "input": "listOfClasses.tsv"
+      },
+      {
+        "tag": "genEds",
+        "input": "listOfClasses.tsv",
+        "filter": "genEds"
+      },
+      {
+        "tag": "query"
+      }
+    ],
+    "columns": [
+      { "tag": "classesPerDepartment", "query": "ho"},
+      { "tag": "sectionsPerDepartment", "query": "hell"}
+    ]
+  }
+]

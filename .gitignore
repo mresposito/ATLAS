@@ -16,6 +16,8 @@
 .buildpath
 .project
 .settings
+*.sc
+.worksheet/*
 
 # sbt
 logs
