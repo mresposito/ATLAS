@@ -1,25 +1,47 @@
 package edu.illinois.learn.controllers
 
-import edu.illinois.learn.models.DataAccessLayer
-import edu.illinois.learn.models.Class
+import edu.illinois.learn.models._
+import edu.illinois.learn.io._
 import edu.illinois.learn.utils.TSVUtil
 import com.typesafe.config.ConfigFactory
 import scala.collection.JavaConversions._
-
 import com.typesafe.scalalogging.slf4j.Logging
 
-object ClassRunner extends Logging {
+object ConfigReader {
+  val conf = ConfigFactory.load
+  def getString(str: String) = conf.getString(str)
+  def jsonLocation: String = conf.getString("settings.configJson")
+}
 
-   val conf = ConfigFactory.load
-  
+class RealQueryManager(semester: String, aggregation: Aggregation, column: Column) extends 
+	QueryManager(semester, aggregation, column) with InputLoaderImp with OutputWriterImp with JsonLoaderImp
+
+trait SeriesRunner {
+  this: JsonLoader =>
+    
+  def start = loadSeries map runSerial
+
+  def runSerial(serial: Serial) = for {
+    semester <- serial.semesters
+    aggregation <- serial.aggregations
+    column <- serial.columns
+  } yield (new RealQueryManager(semester, aggregation, column))
+}
+
+object ProgramRunner extends Logging {
+
+  object SeriesRunnerImpl extends SeriesRunner with JsonLoaderImp
+  /**
+   *  entry point of the program
+   *  Runs all the series inside
+   *  the configuration file
+   */ 
   def main(args: Array[String]): Unit = {
-    val semesters = conf.getList("classes.long")
-    val sem: Seq[String] = semesters.unwrapped().map(_.toString)
-    sem.map(s => new SemesterRunner(s))
+    SeriesRunnerImpl.start
   }
 }
 
-class SemesterRunner(semester: String) extends TSVUtil with  Logging {
+class SemesterRunner(semester: String) extends TSVUtil with Logging {
 
    val conf = ConfigFactory.load
    val listOfClasses = conf.getString("input.listOfClasses")

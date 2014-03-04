@@ -1,8 +1,10 @@
 package edu.illinois.learn.models
 
 import scala.slick.driver.MySQLDriver.simple._
+import edu.illinois.learn.controllers.ConfigReader
 import Database.threadLocalSession
 import scala.slick.jdbc.{GetResult, StaticQuery => Q}
+import scala.reflect.runtime.{universe => ru}
 
 case class Enrollment (
 	semester: String,
@@ -10,8 +12,42 @@ case class Enrollment (
 	crn: String,
 	enrollments: Int)
 
-class DataAccessLayer {
-  val connection = Database.forURL("jdbc:mysql://localhost/moodle", driver="com.mysql.jdbc.Driver", user="root") 
+trait DBConnection {
+
+  def createConnection = {
+    // TODO: Include password setting
+    val url = ConfigReader.getString("database.url")
+    val user = ConfigReader.getString("database.user")
+    Database.forURL(url, driver="com.mysql.jdbc.Driver", user=user)
+  }
+
+  val connection = createConnection
+}
+
+
+class DAL (semester: String, aggregation: Aggregation, column: Column) extends DBConnection {
+  
+  def hello(name: String) = "Hello " + name
+}
+
+class Reflector(val dal: DAL) {
+
+  def hasReflection[T](term: String): Boolean = {
+    val m = ru.runtimeMirror(dal.getClass.getClassLoader)
+	  val termSymbol = ru.typeOf[DAL].declaration(ru.newTermName(term))
+	  termSymbol.isTerm
+  }
+
+  def reflect(term: String) = {
+    val m = ru.runtimeMirror(dal.getClass.getClassLoader)
+	  val termSymbol = ru.typeOf[DAL].declaration(ru.newTermName(term)).asMethod
+	  val im = m.reflect(dal) 
+	  im.reflectMethod(termSymbol)
+  }
+  
+}
+
+class DataAccessLayer extends DBConnection {
 
   def findForum(id: Long) = connection withSession {
     Query(Forums).filter(_.id === id).firstOption
