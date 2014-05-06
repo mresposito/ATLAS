@@ -13,8 +13,8 @@ import com.typesafe.scalalogging.slf4j.Logging
  * executes the query by calling the Data Access Layer
  * and writes to the specified output
  */
-abstract class QueryManager(semester: String, aggregation: Aggregation, column: Column)
-	extends InputLoader with OutputWriter {
+class QueryManager(semester: String, aggregation: Aggregation, column: Column)
+	extends InputLoaderImp with OutputWriterImp with JsonLoaderImp {
 
   def apply = for {
     input <- readInput(semester, aggregation)

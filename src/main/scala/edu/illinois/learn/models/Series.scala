@@ -1,10 +1,10 @@
 package edu.illinois.learn.models
 
 /**
- * Super class, defines how 
+ * Super class, defines how
  * the json is parsed
  */
-case class Serial(name: String, 
+case class Serial(name: String,
   semesters: List[String],
   aggregations: List[Aggregation],
   columns: List[Column])

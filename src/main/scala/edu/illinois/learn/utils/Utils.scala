@@ -6,11 +6,17 @@ package edu.illinois.learn.utils
 import edu.illinois.learn.models.Class
 import java.io.PrintWriter
 import scala.io.Source
+import com.typesafe.scalalogging.slf4j.Logging
 
-trait TSVUtil {
+trait TSVUtil extends Logging {
 
-  def readTSVLines(input: String):Array[String] = {
+  def readTSVLines(input: String):Array[String] = try {
     Source.fromFile(input).getLines.drop(1).toArray
+  } catch {
+    case e: Exception => {
+      logger.error(s"Could not read from file ${input}.")
+      Array()
+    }
   }
 
   def readfromIO(input: String):Array[Array[String]] = {

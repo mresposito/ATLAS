@@ -13,19 +13,19 @@ object ConfigReader {
   def jsonLocation: String = conf.getString("settings.configJson")
 }
 
-class RealQueryManager(semester: String, aggregation: Aggregation, column: Column) extends 
-	QueryManager(semester, aggregation, column) with InputLoaderImp with OutputWriterImp with JsonLoaderImp
-
 trait SeriesRunner {
   this: JsonLoader =>
     
+  /**
+   * Runs the analysis on every series that we have
+   */
   def start = loadSeries map runSerial
 
   def runSerial(serial: Serial) = for {
     semester <- serial.semesters
     aggregation <- serial.aggregations
     column <- serial.columns
-  } yield (new RealQueryManager(semester, aggregation, column))
+  } yield (new QueryManager(semester, aggregation, column))
 }
 
 object ProgramRunner extends Logging {
