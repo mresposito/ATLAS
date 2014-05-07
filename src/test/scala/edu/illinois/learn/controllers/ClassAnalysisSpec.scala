@@ -5,7 +5,6 @@ package edu.illinois.learn.controllers
 
 // Specs2
 import org.specs2.mutable._
-import com.typesafe.scalalogging.slf4j.Logging
 
 class ClassAnalysisSpec extends Specification {
 

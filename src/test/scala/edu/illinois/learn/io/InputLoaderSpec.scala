@@ -6,7 +6,7 @@ package edu.illinois.learn.io
 import org.specs2.mutable._
 import edu.illinois.learn.models._
 
-class JsonLoaderSpec extends Specification {
+class InputLoaderSpec extends Specification {
   object testLoader extends InputLoaderImp with JsonLoaderImp
 
   val semester = "2012fall"

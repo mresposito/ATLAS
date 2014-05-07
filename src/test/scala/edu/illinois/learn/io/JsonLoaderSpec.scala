@@ -6,7 +6,6 @@ package edu.illinois.learn.controllers
 import edu.illinois.learn.models._
 import edu.illinois.learn.io._
 import org.specs2.mutable._
-import com.typesafe.scalalogging.slf4j.Logging
 
 class JsonLoaderSpec extends Specification {
   

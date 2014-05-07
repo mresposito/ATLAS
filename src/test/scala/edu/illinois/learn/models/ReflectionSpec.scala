@@ -4,7 +4,6 @@
 package edu.illinois.learn.models
 // Specs2
 import org.specs2.mutable._
-import com.typesafe.scalalogging.slf4j.Logging
 import edu.illinois.learn.controllers.Reflector
 import edu.illinois.learn.io.Empty
 

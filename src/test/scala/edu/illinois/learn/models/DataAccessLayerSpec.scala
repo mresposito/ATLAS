@@ -5,7 +5,6 @@ package edu.illinois.learn.models
 
 // Specs2
 import org.specs2.mutable._
-import com.typesafe.scalalogging.slf4j.{ LazyLogging => Logging }
 import edu.illinois.learn.io.Empty
 import edu.illinois.learn.io.TSVOutput
 
