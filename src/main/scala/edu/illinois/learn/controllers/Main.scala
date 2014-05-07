@@ -5,7 +5,7 @@ import edu.illinois.learn.io._
 import edu.illinois.learn.utils.TSVUtil
 import com.typesafe.config.ConfigFactory
 import scala.collection.JavaConversions._
-import com.typesafe.scalalogging.slf4j.Logging
+import com.typesafe.scalalogging.slf4j.LazyLogging
 
 object ConfigReader {
   val conf = ConfigFactory.load
@@ -25,10 +25,12 @@ trait SeriesRunner {
     semester <- serial.semesters
     aggregation <- serial.aggregations
     column <- serial.columns
-  } yield (new QueryManager(semester, aggregation, column))
+  } yield {
+    new QueryManager(semester, aggregation, column)
+  }
 }
 
-object ProgramRunner extends Logging {
+object ProgramRunner {
 
   object SeriesRunnerImpl extends SeriesRunner with JsonLoaderImp
   /**
@@ -41,7 +43,7 @@ object ProgramRunner extends Logging {
   }
 }
 
-class SemesterRunner(semester: String) extends TSVUtil with Logging {
+class SemesterRunner(semester: String) extends TSVUtil with LazyLogging {
 
    val conf = ConfigFactory.load
    val listOfClasses = conf.getString("input.listOfClasses")

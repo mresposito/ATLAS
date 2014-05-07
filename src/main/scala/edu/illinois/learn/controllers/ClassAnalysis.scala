@@ -3,7 +3,7 @@
  */
 package edu.illinois.learn.controllers
 
-import com.typesafe.scalalogging.slf4j.Logging
+import com.typesafe.scalalogging.slf4j.{ LazyLogging => Logging }
 import edu.illinois.learn.models.Class
 import edu.illinois.learn.utils.TSVUtil
 import org.json4s._

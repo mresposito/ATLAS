@@ -1,7 +1,6 @@
 package edu.illinois.learn.controllers
 
 import org.specs2.mutable._
-import com.typesafe.scalalogging.slf4j.Logging
 import edu.illinois.learn.models.Aggregation
 import edu.illinois.learn.models.Column
 import edu.illinois.learn.io._

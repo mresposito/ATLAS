@@ -5,7 +5,7 @@ import edu.illinois.learn.io._
 import edu.illinois.learn.utils.TSVUtil
 import com.typesafe.config.ConfigFactory
 import scala.collection.JavaConversions._
-import com.typesafe.scalalogging.slf4j.Logging
+import com.typesafe.scalalogging.slf4j.{ LazyLogging => Logging }
 
 /**
  * This is the class that manages most
@@ -16,10 +16,17 @@ import com.typesafe.scalalogging.slf4j.Logging
 class QueryManager(semester: String, aggregation: Aggregation, column: Column)
 	extends InputLoaderImp with OutputWriterImp with JsonLoaderImp {
 
-  def apply = for {
+  private def formatTag = {
+    def upper(s: String) = s.head.toUpper + s.tail
+    upper(aggregation.tag) + upper(aggregation.tag)
+  }
+  /**
+   * Execute as a constructor
+   */
+  for {
     input <- readInput(semester, aggregation)
     output <- executeQuery(input)
-  } yield write(output)
+  } yield write(output, semester + "New", formatTag)
   
   /**
    * Looks up in the DAL if we have the query

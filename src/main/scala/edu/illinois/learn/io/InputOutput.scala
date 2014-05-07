@@ -3,16 +3,15 @@ package edu.illinois.learn.io
 import edu.illinois.learn.models._
 import edu.illinois.learn.utils.TSVUtil
 import edu.illinois.learn.controllers._
-import com.typesafe.scalalogging.slf4j.Logging
+import com.typesafe.scalalogging.slf4j.{ LazyLogging => Logging }
+import java.io.PrintWriter
+import java.io.File
 
 sealed trait Input 
 case class JsonInput(classes: List[Class]) extends Input
 
-sealed class Writable
-case class KV[T](k: String, v: T) extends Writable
-
 sealed trait Output 
-case class TSVOutput[T<: Writable](results: List[T]) extends Output 
+case class TSVOutput[T <% Ordered[T]](results: List[(String, T)]) extends Output 
 // If nothing in returned
 case object Empty extends Input with Output
 
@@ -111,9 +110,37 @@ trait InputFilters extends TSVUtil {
 
 trait OutputWriter {
   
-  def write(output: Output)
+  def write(output: Output, folder: String, file: String)
 }
 
 trait OutputWriterImp extends OutputWriter {
-  def write(output: Output) = {}
+  
+  private val outputPath = ConfigReader.getString("settings.outputFolder")
+  
+  private def printOutput(path: String, content: String) = {
+    val p = new PrintWriter(path, "UTF-8")
+    p print content
+    p.close()
+  }
+  
+  private def checkPath(folder: String) = {
+    val path = new File(folder)
+    if(! path.exists()) {
+      path.mkdir()
+    }
+  }
+  
+  def write(output: Output, folder: String, file: String) = {
+    val writePath = outputPath + folder 
+    checkPath(writePath)
+    prepareWrite(output, writePath + "/" + file + ".tsv")
+  }
+    
+  private def prepareWrite(output: Output, path: String) = output match {
+    case TSVOutput(list) => {
+      val result = list.map { case (k,v) => s"${k}\t${v}" } mkString("\n")
+      printOutput(path, result)
+    }
+    case Empty => {}
+  }
 }

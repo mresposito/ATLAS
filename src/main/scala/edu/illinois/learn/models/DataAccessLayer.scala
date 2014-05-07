@@ -7,7 +7,6 @@ import scala.slick.jdbc.{GetResult, StaticQuery => Q}
 import edu.illinois.learn.io.Input
 import edu.illinois.learn.io.Output
 import edu.illinois.learn.io.Empty
-import edu.illinois.learn.io.KV
 import edu.illinois.learn.io.TSVOutput
 
 case class Enrollment (
@@ -35,8 +34,8 @@ class DAL (semester: String, aggregation: Aggregation,
   
   def AggregatedOutput[T](m: Map[String, List[T]]): Output = {
     val results = m.map {
-      case (k, v) => KV(k, v.length)
-    }.toList
+      case (k, v) => (k, v.length)
+    }.toList.sortBy(_._2)
     TSVOutput(results)
   }
   

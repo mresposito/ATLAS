@@ -18,7 +18,9 @@
     ],
     "columns": [
       { "tag": "classesPerDepartment", "query": "ho"},
-      { "tag": "sectionsPerDepartment", "query": "hell"}
+      { "tag": "sectionsPerDepartment", "query": "hell"},
+      { "tag": "sectionsPerDepartment", "query": "hell"},
+      { "tag": "forumTypePerClass", "query": "countForumType" }
     ]
   }
 ]

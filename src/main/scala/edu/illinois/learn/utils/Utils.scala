@@ -6,7 +6,7 @@ package edu.illinois.learn.utils
 import edu.illinois.learn.models.Class
 import java.io.PrintWriter
 import scala.io.Source
-import com.typesafe.scalalogging.slf4j.Logging
+import com.typesafe.scalalogging.slf4j.{ LazyLogging => Logging }
 
 trait TSVUtil extends Logging {
 

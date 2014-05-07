@@ -5,11 +5,9 @@ package edu.illinois.learn.models
 
 // Specs2
 import org.specs2.mutable._
-import com.typesafe.scalalogging.slf4j.Logging
+import com.typesafe.scalalogging.slf4j.{ LazyLogging => Logging }
 import edu.illinois.learn.io.Empty
 import edu.illinois.learn.io.TSVOutput
-import edu.illinois.learn.io.KV
-import edu.illinois.learn.io.Writable
 
 class DALSpec extends Specification {
   
@@ -17,10 +15,9 @@ class DALSpec extends Specification {
   "Count forum type" should {
     "count 8446 general" in {
       val TSVOutput(out) = dal.countForumType
-      val general: Writable = out.find {
-        case KV(k, v) => k == "general"
+      val (k, v) = out.find {
+        case (k, v) => k == "general"
       }.get
-      val KV(k, v) = general
       v must beEqualTo(8446)
     }
   }
