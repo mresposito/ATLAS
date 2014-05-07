@@ -4,6 +4,11 @@ import scala.slick.driver.MySQLDriver.simple._
 import edu.illinois.learn.controllers.ConfigReader
 import Database.threadLocalSession
 import scala.slick.jdbc.{GetResult, StaticQuery => Q}
+import edu.illinois.learn.io.Input
+import edu.illinois.learn.io.Output
+import edu.illinois.learn.io.Empty
+import edu.illinois.learn.io.KV
+import edu.illinois.learn.io.TSVOutput
 
 case class Enrollment (
 	semester: String,
@@ -22,36 +27,29 @@ trait DBConnection {
 }
 
 
-class DAL (semester: String,
-    aggregation: Aggregation, column: Column) extends DBConnection {
+class DAL (semester: String, aggregation: Aggregation, 
+    column: Column, input: Input = Empty) extends DBConnection {
   
   def hello = "Hello "
   def hi(name: String) = "hi " + name
-}
-
-class Reflector(val dal: DAL) {
   
-  case class Caller[T>: Null<: AnyRef](klass:T) {
-    def call(methodName: String, args: AnyRef*): AnyRef = {
-      def argtypes = args.map(_.getClass)
-      def method = klass.getClass.getMethod(methodName, argtypes: _*)
-      method.invoke(klass ,args: _*)
-    }
-    def hasMethod(methodName: String): Boolean = try {
-      klass.getClass().getMethod(methodName)
-      true
-    } catch {
-      case e: NoSuchMethodException => false
+  def AggregatedOutput[T](m: Map[String, List[T]]): Output = {
+    val results = m.map {
+      case (k, v) => KV(k, v.length)
+    }.toList
+    TSVOutput(results)
+  }
+  
+  /**
+   * Query methods
+   */
+  def example: Output = input.asInstanceOf[Output]
+
+  def countForumType: Output = AggregatedOutput {
+    connection withSession {
+      Query(Forums).list.groupBy(_.forumType)
     }
   }
-  implicit def anyref2callable[T>: Null<: AnyRef](klass: T): Caller[T] = {
-    new Caller(klass)
-  }
-
-  def hasReflection(method: String): Boolean = dal hasMethod method
-
-  def call(method: String, args: AnyRef*) = dal.call(method, args: _*)
-  def call(method: String) = dal call method
 }
 
 class DataAccessLayer extends DBConnection {

@@ -9,7 +9,7 @@ sealed trait Input
 case class JsonInput(classes: List[Class]) extends Input
 
 sealed class Writable
-case class StringInt(str: String, int: Int) extends Writable
+case class KV[T](k: String, v: T) extends Writable
 
 sealed trait Output 
 case class TSVOutput[T<: Writable](results: List[T]) extends Output 

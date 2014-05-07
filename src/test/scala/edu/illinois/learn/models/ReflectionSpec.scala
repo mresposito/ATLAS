@@ -5,10 +5,12 @@ package edu.illinois.learn.models
 // Specs2
 import org.specs2.mutable._
 import com.typesafe.scalalogging.slf4j.Logging
+import edu.illinois.learn.controllers.Reflector
+import edu.illinois.learn.io.Empty
 
 class ReflectionSpec extends Specification {
   
-  val dal = new DAL("2012fall", Aggregation("a"), Column("b", "c"))
+  val dal = new DAL("2012fall", Aggregation("a"), Column("b", "c"), Empty)
   val reflector = new Reflector(dal)
   "Reflexive should" should {
   	"has Reflexive should" in {

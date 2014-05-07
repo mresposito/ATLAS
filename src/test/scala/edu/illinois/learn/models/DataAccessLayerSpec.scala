@@ -6,6 +6,25 @@ package edu.illinois.learn.models
 // Specs2
 import org.specs2.mutable._
 import com.typesafe.scalalogging.slf4j.Logging
+import edu.illinois.learn.io.Empty
+import edu.illinois.learn.io.TSVOutput
+import edu.illinois.learn.io.KV
+import edu.illinois.learn.io.Writable
+
+class DALSpec extends Specification {
+  
+  val dal = new DAL("2012fall", Aggregation("a"), Column("b", "c"), Empty)
+  "Count forum type" should {
+    "count 8446 general" in {
+      val TSVOutput(out) = dal.countForumType
+      val general: Writable = out.find {
+        case KV(k, v) => k == "general"
+      }.get
+      val KV(k, v) = general
+      v must beEqualTo(8446)
+    }
+  }
+}
 
 class DataAccessLayerSpec extends Specification {
 
