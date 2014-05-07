@@ -98,13 +98,13 @@ trait InputFilters extends TSVUtil {
   /**
    * Looks at the lectures from a given input
    */
-  def lectures(xs: List[Class]) = xs.filter{ cls =>
+  def lectures(xs: List[Class]) = xs.filter { cls =>
     cls.classType contains "Lecture" 
   }
   /**
    * filters the gen eds,
    */
-  def genEds(xs: List[Class]) = xs.filter{ cls =>
+  def genEds(xs: List[Class]) = xs.filter { cls =>
     cls.genEd.isDefined
   }
 }

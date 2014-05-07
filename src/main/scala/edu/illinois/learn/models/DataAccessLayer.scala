@@ -4,7 +4,6 @@ import scala.slick.driver.MySQLDriver.simple._
 import edu.illinois.learn.controllers.ConfigReader
 import Database.threadLocalSession
 import scala.slick.jdbc.{GetResult, StaticQuery => Q}
-import scala.reflect.runtime.{universe => ru}
 
 case class Enrollment (
 	semester: String,
@@ -14,37 +13,45 @@ case class Enrollment (
 
 trait DBConnection {
 
-  def createConnection = {
+  lazy val connection = {
     // TODO: Include password setting
     val url = ConfigReader.getString("database.url")
     val user = ConfigReader.getString("database.user")
     Database.forURL(url, driver="com.mysql.jdbc.Driver", user=user)
   }
-
-  val connection = createConnection
 }
 
 
-class DAL (semester: String, aggregation: Aggregation, column: Column) extends DBConnection {
+class DAL (semester: String,
+    aggregation: Aggregation, column: Column) extends DBConnection {
   
-  def hello(name: String) = "Hello " + name
+  def hello = "Hello "
+  def hi(name: String) = "hi " + name
 }
 
 class Reflector(val dal: DAL) {
-
-  def hasReflection[T](term: String): Boolean = {
-    val m = ru.runtimeMirror(dal.getClass.getClassLoader)
-	  val termSymbol = ru.typeOf[DAL].declaration(ru.newTermName(term))
-	  termSymbol.isTerm
-  }
-
-  def reflect(term: String) = {
-    val m = ru.runtimeMirror(dal.getClass.getClassLoader)
-	  val termSymbol = ru.typeOf[DAL].declaration(ru.newTermName(term)).asMethod
-	  val im = m.reflect(dal) 
-	  im.reflectMethod(termSymbol)
-  }
   
+  case class Caller[T>: Null<: AnyRef](klass:T) {
+    def call(methodName: String, args: AnyRef*): AnyRef = {
+      def argtypes = args.map(_.getClass)
+      def method = klass.getClass.getMethod(methodName, argtypes: _*)
+      method.invoke(klass ,args: _*)
+    }
+    def hasMethod(methodName: String): Boolean = try {
+      klass.getClass().getMethod(methodName)
+      true
+    } catch {
+      case e: NoSuchMethodException => false
+    }
+  }
+  implicit def anyref2callable[T>: Null<: AnyRef](klass: T): Caller[T] = {
+    new Caller(klass)
+  }
+
+  def hasReflection(method: String): Boolean = dal hasMethod method
+
+  def call(method: String, args: AnyRef*) = dal.call(method, args: _*)
+  def call(method: String) = dal call method
 }
 
 class DataAccessLayer extends DBConnection {
