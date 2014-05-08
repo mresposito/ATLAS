@@ -7,7 +7,7 @@ import edu.illinois.learn.io._
 class QueryManagerSpec extends Specification {
   
   def query(method: String, input: Input): Option[Output] = {
-    val q = Query(Column("fake", method), Some("fall2012"), Some(Aggregation("a")))
+    val q = Query(Column(method), Some("fall2012"), Some(Aggregation("a")))
     val qm = new QueryManager(q)
     qm.executeQuery(input)
   }

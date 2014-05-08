@@ -4,8 +4,8 @@ import org.specs2.mutable._
 
 class SerialSpec extends Specification {
   
-  val col1 = Column("a", "b")
-  val col2 = Column("c", "d")
+  val col1 = Column("a")
+  val col2 = Column("c")
   val ag1 = Aggregation("a")
   val columns = List(col1, col2)
   "Make Series" should {

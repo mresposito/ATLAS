@@ -33,7 +33,14 @@ class JsonLoaderSpec extends Specification {
   	   [{"name": "michele",
          "columns": [{"tag": "me", "query": "hello"}]}]
       """) must beEqualTo(List(
-        Serial("michele", List(), List(), List(Column("me", "hello")))))
+        Serial("michele", List(), List(), List(Column("hello", Some("me"))))))
+    }
+    "read json with column and only query" in {
+  	  jsonImp.readInput("""
+  	   [{"name": "michele",
+         "columns": [{"query": "hello"}]}]
+      """) must beEqualTo(List(
+        Serial("michele", List(), List(), List(Column("hello", None)))))
     }
 
   	"read full series" in {

@@ -9,7 +9,7 @@ import edu.illinois.learn.io.Empty
 import edu.illinois.learn.io.TSVOutput
 
 trait QuerySpec {
-  val query = Query(Column("b", "c"), None, None)
+  val query = Query(Column("b"), None, None)
   val dal = new DAL(query)
 }
 

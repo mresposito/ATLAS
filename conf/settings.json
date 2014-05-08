@@ -14,8 +14,15 @@
       }
     ],
     "columns": [
-      { "tag": "classesPerDepartment", "query": "ho"},
-      { "tag": "sectionsPerDepartment", "query": "hell"},
+      { "tag": "locationPerSection" , "query": "countLocationPerSection"},
+      { "tag": "instructorPerSection" , "query": "countInstructorPerSection"},
+      { "tag": "sectionsPerDepartment" , "query": "countSectionsPerDepartment"},
+      { "tag": "sectionsPerClass" , "query": "countSectionsPerClass"},
+      { "tag": "classesPerDepartment", "query": "countClassesPerDepartment"},
+
+      { "query": "forumPerClass" },
+      { "query": "forumPerDepartment" },
+
       { "tag": "forumTypePerClass", "query": "countForumType" }
     ]
   },

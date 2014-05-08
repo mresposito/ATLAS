@@ -41,5 +41,8 @@ case class Aggregation(tag: String,
   input: Option[String] = None,
   filter: Option[String] = None)
 
-case class Column(tag: String,
-  query: String)
+case class Column(query: String,
+  tag: Option[String] = None) {
+  
+  def getTag: String = tag.getOrElse(query)
+}

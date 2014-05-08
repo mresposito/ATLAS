@@ -9,6 +9,7 @@ import edu.illinois.learn.io.Input
 import edu.illinois.learn.io.Output
 import edu.illinois.learn.io.Empty
 import edu.illinois.learn.io.TSVOutput
+import edu.illinois.learn.io.JsonInput
 
 case class Enrollment (
 	semester: String,
@@ -26,24 +27,64 @@ trait DBConnection {
   }
 }
 
-
-class DAL (query: Query, input: Input = Empty) extends DBConnection {
+object OutputConverters {
   
-  def hello = "Hello "
-  def hi(name: String) = "hi " + name
-  
-  def AggregatedOutput[T](m: Map[String, List[T]]): Output = {
+  implicit def AggregatedOutput[T](m: Map[String, List[T]]): Output = {
     val results = m.map {
       case (k, v) => (k, v.length)
     }.toList.sortBy(_._2)
     TSVOutput(results)
   }
+  implicit def ToOutput[T <% Ordered[T]](
+    m: Map[String, T]): Output = TSVOutput(m.toList.sortBy(_._2))
+}
+
+class DAL (query: Query, input: Input = Empty) extends DBConnection {
+  
+  import OutputConverters._
+  
+  private val dal = new DataAccessLayer
+  /** methods to try reflexive stuff */
+  def hello = "Hello "
+  def hi(name: String) = "hi " + name
+  def example: Output = input.asInstanceOf[Output]
   
   /**
-   * Query methods
+   * QUERY METHODS
    */
-  def example: Output = input.asInstanceOf[Output]
 
+  val classes = input match {
+    case JsonInput(cls) => cls 
+    case _ => List()
+  }
+  /**
+   * Classes methods
+   */
+  def countSectionsPerDepartment: Output = classes.groupBy(_.dep)
+
+  def countInstructorPerSection: Output = classes.groupBy(_.instructor)
+
+  def countSectionsPerClass: Output = classes.groupBy(_.classSpec)
+
+  def countClassesPerDepartment: Output = classes.groupBy(_.dep).
+    map{ case(k,v) => (k, v.groupBy(_.classSpec).size) }
+
+  def countLocationPerSection: Output = classes.groupBy(_.location)
+
+  /**
+   * Forum methods
+   */
+  def forumPerClass: Output = dal.joinCourses(classes).groupBy {
+    case (k,v) => k.classSpec
+  }
+
+  def forumPerDepartment: Output = dal.joinCourses(classes).groupBy {
+    case (k,v) => k.dep
+  }
+
+  /**
+   * Database queries
+   */
   def countForumType: Output = AggregatedOutput {
     connection withSession {
       SQuery(Forums).list.groupBy(_.forumType)

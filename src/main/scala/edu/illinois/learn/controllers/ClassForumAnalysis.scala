@@ -5,10 +5,9 @@ import edu.illinois.learn.models.{Class, ForumInfo}
 
 case class ClassForum(cls: Class, forums: List[ForumInfo])
 
-class ClassForumAnalysis(val classAnalysis: ClassAnalysis) {
+class ClassForumAnalysis(val classes: List[Class]) {
   val dal = new DataAccessLayer
-  val classes = classAnalysis.classes
-  val name = classAnalysis.name
+  val name = "hello"
 
   val validCourses = classes.filter { cls =>
     dal.getCourseId(cls.crn).isDefined
@@ -55,13 +54,5 @@ class ClassForumAnalysis(val classAnalysis: ClassAnalysis) {
     (cls.classSpec,
       dal.findDeviationPerClass(dal.getCourseId(cls.crn).get))
   }.toMap
-
-  def forumCountPerClass = dal.joinCourses(classes).groupBy {
-    case (k,v) => k.classSpec
-  }
-
-  def forumCountPerDepartment =  dal.joinCourses(classes).groupBy {
-    case (k,v) => k.dep
-  }
 }
 

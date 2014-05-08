@@ -19,8 +19,9 @@ class QueryManager(query: Query)
 
   private def formatTag = {
     def upper(s: String) = s.head.toUpper + s.tail
-    val aggregationTag = query.aggregation.map(a => upper(a.tag)).getOrElse("")
-    aggregationTag + upper(query.column.tag)
+    query.aggregation.map { agr =>
+      agr.tag + upper(query.column.getTag)
+    }.getOrElse(query.column.getTag)
   }
   /**
    * Execute as a constructor
@@ -37,6 +38,8 @@ class QueryManager(query: Query)
     output <- executeQuery(validInput)
   } yield write(output, query.semester.getOrElse("database") + "New", formatTag)
   
+  // used so we don't have to specify type in DAL class
+  import OutputConverters._
   /**
    * Looks up in the DAL if we have the query
    */
