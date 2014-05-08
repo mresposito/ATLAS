@@ -1,6 +1,7 @@
 package edu.illinois.learn.models
 
 import scala.slick.driver.MySQLDriver.simple._
+import scala.slick.driver.MySQLDriver.simple.{ Query => SQuery }
 import edu.illinois.learn.controllers.ConfigReader
 import Database.threadLocalSession
 import scala.slick.jdbc.{GetResult, StaticQuery => Q}
@@ -26,8 +27,7 @@ trait DBConnection {
 }
 
 
-class DAL (semester: String, aggregation: Aggregation, 
-    column: Column, input: Input = Empty) extends DBConnection {
+class DAL (query: Query, input: Input = Empty) extends DBConnection {
   
   def hello = "Hello "
   def hi(name: String) = "hi " + name
@@ -46,7 +46,7 @@ class DAL (semester: String, aggregation: Aggregation,
 
   def countForumType: Output = AggregatedOutput {
     connection withSession {
-      Query(Forums).list.groupBy(_.forumType)
+      SQuery(Forums).list.groupBy(_.forumType)
     }
   }
 }
@@ -54,11 +54,11 @@ class DAL (semester: String, aggregation: Aggregation,
 class DataAccessLayer extends DBConnection {
 
   def findForum(id: Long) = connection withSession {
-    Query(Forums).filter(_.id === id).firstOption
+    SQuery(Forums).filter(_.id === id).firstOption
   }
 
   def countForumType = connection withSession {
-    Query(Forums).list.groupBy(_.forumType)
+    SQuery(Forums).list.groupBy(_.forumType)
   }
 
   def joinCourses(courses: List[Class]): List[(Class, Forum)] = connection withSession { 
@@ -74,19 +74,19 @@ class DataAccessLayer extends DBConnection {
   }
 
   def getCRN(courseId: Long) = connection withSession {
-    Query(CRNs).filter(_.courseId === courseId).map(_.crn).firstOption
+    SQuery(CRNs).filter(_.courseId === courseId).map(_.crn).firstOption
   }
 
   def getCourseId(crn: Int) = connection withSession {
-    Query(CRNs).filter(_.crn === crn).map(_.courseId).firstOption
+    SQuery(CRNs).filter(_.crn === crn).map(_.courseId).firstOption
   }
 
   def findForumPost(id: Long) = connection withSession {
-    Query(ForumPosts).filter(_.id === id).firstOption
+    SQuery(ForumPosts).filter(_.id === id).firstOption
   }
 
   def findForumDiscussion(id: Long) = connection withSession {
-    Query(ForumDiscussions).filter(_.id === id).firstOption
+    SQuery(ForumDiscussions).filter(_.id === id).firstOption
   }
   
   implicit val getEnrollmentResult = GetResult(r => Enrollment(r.<<, r.<<, r.<<, r.<<))

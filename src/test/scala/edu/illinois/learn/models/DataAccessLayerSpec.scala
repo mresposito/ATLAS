@@ -8,9 +8,13 @@ import org.specs2.mutable._
 import edu.illinois.learn.io.Empty
 import edu.illinois.learn.io.TSVOutput
 
-class DALSpec extends Specification {
+trait QuerySpec {
+  val query = Query(Column("b", "c"), None, None)
+  val dal = new DAL(query)
+}
+
+class DALSpec extends Specification with QuerySpec {
   
-  val dal = new DAL("2012fall", Aggregation("a"), Column("b", "c"), Empty)
   "Count forum type" should {
     "count 8446 general" in {
       val TSVOutput(out) = dal.countForumType

@@ -1,15 +1,14 @@
 package edu.illinois.learn.controllers
 
 import org.specs2.mutable._
-import edu.illinois.learn.models.Aggregation
-import edu.illinois.learn.models.Column
+import edu.illinois.learn.models._
 import edu.illinois.learn.io._
   
 class QueryManagerSpec extends Specification {
   
   def query(method: String, input: Input): Option[Output] = {
-    val qm = new QueryManager("fall2012", Aggregation("a"),
-      Column("fake", method))
+    val q = Query(Column("fake", method), Some("fall2012"), Some(Aggregation("a")))
+    val qm = new QueryManager(q)
     qm.executeQuery(input)
   }
 

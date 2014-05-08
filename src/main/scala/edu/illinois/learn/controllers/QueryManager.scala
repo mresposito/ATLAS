@@ -13,28 +13,37 @@ import com.typesafe.scalalogging.slf4j.{ LazyLogging => Logging }
  * executes the query by calling the Data Access Layer
  * and writes to the specified output
  */
-class QueryManager(semester: String, aggregation: Aggregation, column: Column)
+class QueryManager(query: Query)
+//    semester: String, aggregation: Aggregation, column: Column)
 	extends InputLoaderImp with OutputWriterImp with JsonLoaderImp {
 
   private def formatTag = {
     def upper(s: String) = s.head.toUpper + s.tail
-    upper(aggregation.tag) + upper(aggregation.tag)
+    val aggregationTag = query.aggregation.map(a => upper(a.tag)).getOrElse("")
+    aggregationTag + upper(query.column.tag)
   }
   /**
    * Execute as a constructor
    */
+  val input = for { // we need to escape the monad unfortunately
+    semester <- query.semester
+    aggregation <- query.aggregation
+    read <- readInput(semester, aggregation)
+  } yield read
+
+  val validInput: Input = input.getOrElse(Empty)
+
   for {
-    input <- readInput(semester, aggregation)
-    output <- executeQuery(input)
-  } yield write(output, semester + "New", formatTag)
+    output <- executeQuery(validInput)
+  } yield write(output, query.semester.getOrElse("database") + "New", formatTag)
   
   /**
    * Looks up in the DAL if we have the query
    */
   def executeQuery(input: Input): Option[Output] = {
-    val dal = new DAL(semester, aggregation, column, input)
+    val dal = new DAL(query, input)
     val reflector = new Reflector(dal)
-    val method = column.query
+    val method = query.column.query
 
     if(reflector hasReflection method) {
       val o = reflector.call(method)

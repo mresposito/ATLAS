@@ -13,7 +13,7 @@ object ConfigReader {
   def jsonLocation: String = conf.getString("settings.configJson")
 }
 
-trait SeriesRunner {
+trait SeriesRunner extends LazyLogging {
   this: JsonLoader =>
     
   /**
@@ -21,12 +21,13 @@ trait SeriesRunner {
    */
   def start = loadSeries map runSerial
 
-  def runSerial(serial: Serial) = for {
-    semester <- serial.semesters
-    aggregation <- serial.aggregations
-    column <- serial.columns
-  } yield {
-    new QueryManager(semester, aggregation, column)
+  private def runSerial(serial: Serial) = {
+    logger.info(s"Runnig serial: ${serial.name}")
+    run(serial)
+  }
+    
+  private def run(serial: Serial) = serial.makeQueries.map { query =>
+    new QueryManager(query)
   }
 }
 

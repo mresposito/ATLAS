@@ -3,13 +3,14 @@
   <!--Daily rolling file appender -->
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%d{HH:mm:ss} %-5level %logger{36}: %msg%n</pattern>
+      <pattern>[%-5level] %logger{36}: %msg%n</pattern>
     </encoder>
   </appender>
 
   <root>
     <level value="error" />
     <appender-ref ref="STDOUT" />
-    <appender-ref ref="FILE" />
+    <level value="info" />
+    <appender-ref ref="STDOUT" />
   </root>
 </configuration>

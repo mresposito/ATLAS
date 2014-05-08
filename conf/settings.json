@@ -5,22 +5,24 @@
     "aggregations": [
       {
         "tag": "allClasses",
-        "input": "listOfClasses.tsv"
+        "input": "listOfClasses.json"
       },
       {
         "tag": "genEds",
-        "input": "listOfClasses.tsv",
+        "input": "listOfClasses.json",
         "filter": "genEds"
-      },
-      {
-        "tag": "query"
       }
     ],
     "columns": [
       { "tag": "classesPerDepartment", "query": "ho"},
       { "tag": "sectionsPerDepartment", "query": "hell"},
-      { "tag": "sectionsPerDepartment", "query": "hell"},
       { "tag": "forumTypePerClass", "query": "countForumType" }
+    ]
+  },
+  {
+    "name": "semesterIndependent",
+    "columns": [
+      { "tag": "allForumTypes", "query": "countForumType" }
     ]
   }
 ]

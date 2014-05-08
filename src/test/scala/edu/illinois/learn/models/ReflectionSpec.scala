@@ -7,11 +7,10 @@ import org.specs2.mutable._
 import edu.illinois.learn.controllers.Reflector
 import edu.illinois.learn.io.Empty
 
-class ReflectionSpec extends Specification {
+class ReflectionSpec extends Specification with QuerySpec {
   
-  val dal = new DAL("2012fall", Aggregation("a"), Column("b", "c"), Empty)
   val reflector = new Reflector(dal)
-  "Reflexive should" should {
+  "Reflexive " should {
   	"has Reflexive should" in {
       "be false if not valid method" in {
         reflector.hasReflection("WhatsMyMethod") must beFalse

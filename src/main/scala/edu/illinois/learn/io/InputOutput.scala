@@ -37,7 +37,7 @@ trait InputLoaderImp extends InputLoader with JsonLoader with Logging with Input
   	    }
   	  }
   	} else {
-  	  logger.info(s"The input type ${input} you have specified is not valid.")
+  	  logger.info(s"The input ${fullPath} you have specified does not exist.")
   	  // no other type of input is declared so far
   	  None
   	}
