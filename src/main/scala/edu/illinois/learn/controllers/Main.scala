@@ -47,14 +47,8 @@ object ProgramRunner {
 class SemesterRunner(semester: String) extends TSVUtil with LazyLogging {
 
   def executeForumAnalysis(forums: List[ClassForumAnalysis]) = {
-    def run[A](fun: ClassForumAnalysis => Map[String, List[A]],
-      jobName: String): Unit = forums.map { a: ClassForumAnalysis =>
-      writeResults(semester + "/" + a.name + "Forum" + jobName, fun(a))
-    }
     def runCounted[A](fun: ClassForumAnalysis => Map[String, A],
-      jobName: String): Unit = forums.map { a: ClassForumAnalysis =>
-      writeResultsCounted(semester + "/" + a.name + "Forum" + jobName, fun(a))
-    }
+      jobName: String): Unit = {}
     runCounted(_.enrollmentPerClass, "EnrollmentPerClass")
     runCounted(_.departmentPostCount, "EnrollmentPerDepartment")
 

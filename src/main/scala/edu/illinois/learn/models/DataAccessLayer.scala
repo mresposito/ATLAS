@@ -132,14 +132,9 @@ class DataAccessLayer extends DBConnection {
   
   implicit val getEnrollmentResult = GetResult(r => Enrollment(r.<<, r.<<, r.<<, r.<<))
   
-  def getCourseEnrollments = connection withSession {
-	    Q.queryNA[Enrollment]("""
-	  """)
-  }
-  
   def getCRNEnrollment(crn: Int): Option[Int] = connection withSession {
     val q = Q.queryNA[Int](s"""
-    SELECT count(DISTINCT ue.userid)
+    SELECT COUNT(DISTINCT ue.userid)
   	FROM mdl_user_enrolments ue, mdl_enrol e, mdl_course c, `mdl_enrol_autoroster_section` eas
   	WHERE	ue.enrolid = e.id
   		AND c.id = e.courseid
