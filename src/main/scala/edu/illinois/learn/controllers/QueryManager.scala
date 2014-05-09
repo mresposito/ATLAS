@@ -36,7 +36,7 @@ class QueryManager(query: Query)
 
   for {
     output <- executeQuery(validInput)
-  } yield write(output, query.semester.getOrElse("database") + "New", formatTag)
+  } yield write(output, query.semester.getOrElse("database"), formatTag)
   
   // used so we don't have to specify type in DAL class
   import OutputConverters._
