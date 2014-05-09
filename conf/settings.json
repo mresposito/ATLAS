@@ -20,10 +20,17 @@
       { "tag": "sectionsPerClass" , "query": "countSectionsPerClass"},
       { "tag": "classesPerDepartment", "query": "countClassesPerDepartment"},
 
-      { "query": "forumPerClass" },
-      { "query": "forumPerDepartment" },
+      { "tag": "forumTypePerClass", "query": "countForumType" },
 
-      { "tag": "forumTypePerClass", "query": "countForumType" }
+      { "query": "forumPerClass" },
+      { "query": "forumPerDepartment" }
+    ]
+  },
+  {
+    "name": "forum queries",
+    "semesters": ["2013summer", "2013fall", "2013spring"],
+    "columns": [
+      { "query": "postsPerClass" }
     ]
   },
   {

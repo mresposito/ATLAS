@@ -3,60 +3,37 @@ package edu.illinois.learn.models
 import scala.slick.driver.MySQLDriver.simple._
 import scala.slick.driver.MySQLDriver.simple.{ Query => SQuery }
 import edu.illinois.learn.controllers.ConfigReader
-import Database.threadLocalSession
 import scala.slick.jdbc.{GetResult, StaticQuery => Q}
+import Database.threadLocalSession
 import edu.illinois.learn.io.Input
 import edu.illinois.learn.io.Output
 import edu.illinois.learn.io.Empty
 import edu.illinois.learn.io.TSVOutput
 import edu.illinois.learn.io.JsonInput
-
-case class Enrollment (
-	semester: String,
-	shortName: String,
-	crn: String,
-	enrollments: Int)
-
-trait DBConnection {
-
-  lazy val connection = {
-    // TODO: Include password setting
-    val url = ConfigReader.getString("database.url")
-    val user = ConfigReader.getString("database.user")
-    Database.forURL(url, driver="com.mysql.jdbc.Driver", user=user)
-  }
-}
-
-object OutputConverters {
-  
-  implicit def AggregatedOutput[T](m: Map[String, List[T]]): Output = {
-    val results = m.map {
-      case (k, v) => (k, v.length)
-    }.toList.sortBy(_._2)
-    TSVOutput(results)
-  }
-  implicit def ToOutput[T <% Ordered[T]](
-    m: Map[String, T]): Output = TSVOutput(m.toList.sortBy(_._2))
-}
+import scala.slick.jdbc.StaticQuery0
 
 class DAL (query: Query, input: Input = Empty) extends DBConnection {
   
   import OutputConverters._
   
-  private val dal = new DataAccessLayer
+  def upper(s: String) = s.head.toUpper + s.tail
+  private val formattedSemester = query.semester.map{ s =>
+    s.subSequence(0, 4) + " " + upper(s.subSequence(4, s.length()).toString)
+  }.getOrElse("")
+
   /** methods to try reflexive stuff */
   def hello = "Hello "
   def hi(name: String) = "hi " + name
-  def example: Output = input.asInstanceOf[Output]
-  
-  /**
-   * QUERY METHODS
-   */
 
+  def example: Output = input.asInstanceOf[Output]
   val classes = input match {
     case JsonInput(cls) => cls 
     case _ => List()
   }
+  
+  /**
+   * QUERY METHODS
+   */
   /**
    * Classes methods
    */
@@ -74,12 +51,25 @@ class DAL (query: Query, input: Input = Empty) extends DBConnection {
   /**
    * Forum methods
    */
-  def forumPerClass: Output = dal.joinCourses(classes).groupBy {
+  def forumPerClass: Output = joinCourses(classes).groupBy {
     case (k,v) => k.classSpec
   }
 
-  def forumPerDepartment: Output = dal.joinCourses(classes).groupBy {
+  def forumPerDepartment: Output = joinCourses(classes).groupBy {
     case (k,v) => k.dep
+  }
+  
+  def postsPerClass: Output = connection withSession {
+    Q.queryNA[(String, Int)](s"""
+  SELECT eas.`sectionname`, COUNT(fp.id) count
+  FROM mdl_forum f, mdl_course c, `mdl_enrol_autoroster_section` eas,
+    mdl_forum_discussions fd, `mdl_forum_posts` fp
+  WHERE c.id = f.course AND eas.`crid` = c.id
+    AND fd.`forum` = f.id AND fp.`discussion` = fd.`id`
+    AND eas.sectionname LIKE '%${formattedSemester}%'
+
+  GROUP BY f.course
+  ORDER BY count DESC;""")
   }
 
   /**
@@ -89,17 +79,6 @@ class DAL (query: Query, input: Input = Empty) extends DBConnection {
     connection withSession {
       SQuery(Forums).list.groupBy(_.forumType)
     }
-  }
-}
-
-class DataAccessLayer extends DBConnection {
-
-  def findForum(id: Long) = connection withSession {
-    SQuery(Forums).filter(_.id === id).firstOption
-  }
-
-  def countForumType = connection withSession {
-    SQuery(Forums).list.groupBy(_.forumType)
   }
 
   def joinCourses(courses: List[Class]): List[(Class, Forum)] = connection withSession { 
@@ -114,24 +93,6 @@ class DataAccessLayer extends DBConnection {
     }
   }
 
-  def getCRN(courseId: Long) = connection withSession {
-    SQuery(CRNs).filter(_.courseId === courseId).map(_.crn).firstOption
-  }
-
-  def getCourseId(crn: Int) = connection withSession {
-    SQuery(CRNs).filter(_.crn === crn).map(_.courseId).firstOption
-  }
-
-  def findForumPost(id: Long) = connection withSession {
-    SQuery(ForumPosts).filter(_.id === id).firstOption
-  }
-
-  def findForumDiscussion(id: Long) = connection withSession {
-    SQuery(ForumDiscussions).filter(_.id === id).firstOption
-  }
-  
-  implicit val getEnrollmentResult = GetResult(r => Enrollment(r.<<, r.<<, r.<<, r.<<))
-  
   def getCRNEnrollment(crn: Int): Option[Int] = connection withSession {
     val q = Q.queryNA[Int](s"""
     SELECT COUNT(DISTINCT ue.userid)
@@ -144,14 +105,9 @@ class DataAccessLayer extends DBConnection {
     """)
     q.firstOption
   }
+}
 
-  def findPostsPerClass(courseId: Long): Int = connection withSession {
-    (for {
-      f <- Forums if f.courseId is courseId
-      d <- ForumDiscussions if f.id is d.forumId
-      p <- ForumPosts if p.discussionId is d.id 
-    } yield p).list.length
-  }
+trait Statistics {
 
   def stddev(xs: List[Int]): Double = stddev(xs, mean(xs))
   def stddev(xs: List[Int], avg: Double): Double = xs match {
@@ -165,16 +121,31 @@ class DataAccessLayer extends DBConnection {
     case Nil => 0.0
     case ys => ys.reduceLeft(_ + _) / ys.size.toDouble
   }
+}
 
-  def findDeviationPerClass(courseId: Long): Double = connection withSession {
-    val q = (for { 
-      f <- Forums if f.courseId is courseId
-      d <- ForumDiscussions if f.id is d.forumId
-      p <- ForumPosts if p.discussionId is d.id 
-    } yield p)
-    val postsPerStudent = q.list.groupBy(_.userId).map {
-      case (k,v) => v.length
-    }
-    stddev(postsPerStudent.toList)
+trait DBConnection {
+
+  lazy val connection = {
+    // TODO: Include password setting
+    val url = ConfigReader.getString("database.url")
+    val user = ConfigReader.getString("database.user")
+    Database.forURL(url, driver="com.mysql.jdbc.Driver", user=user)
   }
+}
+
+object OutputConverters {
+  
+  implicit def AggregatedOutput[T](m: List[(String, List[T])]): Output = {
+    val results = m.map {
+      case (k, v) => (k, v.length)
+    }.sortBy(_._2)
+    TSVOutput(results)
+  }
+  implicit def ToOutput[T <% Ordered[T]](
+    m: List[(String, T)]): Output = TSVOutput(m.toList.sortBy(_._2))
+
+  implicit def mToList[V](m: Map[String, V]): List[(String, V)] = m.toList
+  implicit def mToOut[T](m: Map[String, List[T]]): Output = mToList(m)
+  implicit def mToOut[T <% Ordered[T]](m: Map[String, T]): Output = mToList(m)
+  implicit def stQuery[T <% Ordered[T]](a: StaticQuery0[(String, T)]): Output = a.list
 }
